@@ -9,7 +9,7 @@ class ApplicationsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('FCM Notifications'),
+        title: const Text('FCM Notification'),
       ),
       body: SafeArea(
         child: Padding(
@@ -98,7 +98,7 @@ class ApplicationsPage extends StatelessWidget {
         ),
       ),
       floatingActionButton: KFab(
-        label: 'New App',
+        label: 'NEW APP',
         onPressed: () {},
         icon: Icons.add_to_photos_rounded,
       ),

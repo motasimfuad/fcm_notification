@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class KFab extends StatelessWidget {
   final IconData? icon;
@@ -14,16 +15,19 @@ class KFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(5),
+      padding: EdgeInsets.symmetric(
+        horizontal: 5.w,
+        vertical: 5.h,
+      ),
       child: FloatingActionButton.extended(
         elevation: 3.5,
         onPressed: onPressed,
         tooltip: label,
         icon: icon != null ? Icon(icon) : const SizedBox.shrink(),
         label: Text(label),
-        shape: const RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
-            Radius.circular(15),
+            Radius.circular(15.r),
           ),
         ),
       ),
