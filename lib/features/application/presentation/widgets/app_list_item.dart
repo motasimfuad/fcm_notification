@@ -1,3 +1,4 @@
+import 'package:fcm_notification/features/application/presentation/widgets/app_list_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,11 +11,11 @@ class AppListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: 15.w,
-        vertical: 12.h,
+        horizontal: 12.w,
+        vertical: 10.h,
       ),
       margin: EdgeInsets.only(
-        bottom: 15.h,
+        bottom: 18.h,
       ),
       decoration: BoxDecoration(
         color: KColors.primary,
@@ -25,30 +26,33 @@ class AppListItem extends StatelessWidget {
         children: [
           Expanded(
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const AppListImage(),
                 SizedBox(width: 10.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        'Name akdshf aa dhfsoaiu sdasjf  adsfads f',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: KColors.secondary,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17.sp,
-                        ),
-                      ),
-                      SizedBox(height: 5.h),
                       Text(
                         'Notifications: 0',
                         style: TextStyle(
                           color: KColors.primaryLight,
                           fontSize: 13.sp,
+                        ),
+                      ),
+                      SizedBox(height: 3.h),
+                      Text(
+                        'Name akdshf aa dhfsoaiu',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: KColors.secondary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18.sp,
                         ),
                       ),
                     ],
@@ -69,24 +73,6 @@ class AppListItem extends StatelessWidget {
           //   ),
           // )
         ],
-      ),
-    );
-  }
-}
-
-class AppListImage extends StatelessWidget {
-  const AppListImage({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 45.w,
-      width: 45.w,
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: BorderRadius.circular(15.r),
       ),
     );
   }

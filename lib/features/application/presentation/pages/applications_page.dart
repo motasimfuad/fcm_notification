@@ -1,4 +1,5 @@
 import 'package:fcm_notification/core/constants/colors.dart';
+import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:fcm_notification/core/widgets/k_fab.dart';
 import 'package:fcm_notification/core/widgets/k_textfield.dart';
 import 'package:fcm_notification/features/application/presentation/widgets/app_list_item.dart';
@@ -52,7 +53,9 @@ class ApplicationsPage extends StatelessWidget {
       floatingActionButton: KFab(
         label: 'NEW APP',
         icon: Icons.add_to_photos_rounded,
-        onPressed: () {},
+        onPressed: () {
+          router.pushNamed(AppRouter.addApplicationPage);
+        },
       ),
     );
   }
