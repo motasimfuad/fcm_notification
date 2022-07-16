@@ -70,7 +70,7 @@ class AppListItem extends StatelessWidget {
                         ),
                         SizedBox(height: 7.h),
                         Text(
-                          'Name akdshf aa ',
+                          'Name akdshf aa adfName akdshf aa  Name akdshf aa ',
                           maxLines: maxLines ?? 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

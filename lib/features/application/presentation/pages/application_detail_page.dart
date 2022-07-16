@@ -1,10 +1,11 @@
+import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:fcm_notification/core/constants/colors.dart';
-import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/features/application/presentation/widgets/app_list_item.dart';
 
+import '../../../../core/widgets/k_appbar.dart';
 import '../../../../core/widgets/k_card.dart';
 import '../../../../core/widgets/k_fab.dart';
 
@@ -19,56 +20,107 @@ class ApplicationDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KColors.background,
-      appBar: const KAppbar(
-        title: 'Application Details',
+      appBar: KAppbar(
+        title: '',
+        height: 50.h,
       ),
       floatingActionButton: KFab(
-        label: 'NEW NOTIFICATION',
+        label: 'NOTIFICATION',
         icon: Icons.notification_add_rounded,
-        onPressed: () {},
+        onPressed: () {
+          router.pushNamed(AppRouter.createNotificationPage);
+        },
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        child: Column(
-          children: [
-            AppListItem(
-              bgColor: KColors.secondary,
-              hasOptionsBtn: false,
-              titleColor: KColors.background,
-              xPadding: 12.w,
-              yPadding: 12.w,
-              titleSize: 20.sp,
-              maxLines: 3,
-            ),
-            SizedBox(height: 10.h),
-            Row(
-              children: [
-                Text(
-                  'Notifications',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.bold,
-                    color: KColors.primaryLight,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 20.w,
+            right: 20.w,
+            top: 20.w,
+          ),
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 10.h),
+                    child: AppListItem(
+                      bgColor: KColors.secondary,
+                      hasOptionsBtn: false,
+                      titleColor: KColors.background,
+                      xPadding: 12.w,
+                      yPadding: 12.w,
+                      titleSize: 20.sp,
+                      maxLines: 1,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 15.h),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                itemBuilder: (BuildContext context, int index) {
-                  return const NotificationItem();
-                },
+                  Positioned(
+                    right: 15.w,
+                    bottom: 0.w,
+                    child: KCard(
+                      color: KColors.primary,
+                      xPadding: 12.w,
+                      yPadding: 12.w,
+                      radius: 200,
+                      hasBorder: true,
+                      hasShadow: false,
+                      borderColor: KColors.secondary,
+                      onTap: () {
+                        print('Tapped');
+                      },
+                      child: Icon(
+                        Icons.settings_rounded,
+                        color: KColors.secondary,
+                        size: 18.w,
+                      ),
+                    ),
+                  ),
+                  // Positioned(
+                  //   right: 15.w,
+                  //   bottom: 0.w,
+                  //   child: Container(
+                  //     padding: EdgeInsets.all(10.w),
+                  //     decoration: BoxDecoration(
+                  //       color: KColors.primary,
+                  //       borderRadius: BorderRadius.circular(15),
+                  //       border: Border.all(
+                  //         color: KColors.secondary,
+                  //         width: 2.w,
+                  //       ),
+                  //     ),
+                  //     child: const Icon(Icons.notification_add_rounded,
+                  //         color: KColors.secondary),
+                  //   ),
+                  // ),
+                ],
               ),
-            ),
-          ],
+              // SizedBox(height: 10.h),
+              Row(
+                children: [
+                  Text(
+                    'Notifications',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: KColors.primaryLight,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.h),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: 10,
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  itemBuilder: (BuildContext context, int index) {
+                    return const NotificationItem();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
