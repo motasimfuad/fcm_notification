@@ -12,13 +12,14 @@ class AppListImage extends StatelessWidget {
     return Container(
       height: 65.w,
       width: 65.w,
-      padding: EdgeInsets.all(3.w),
+      padding: EdgeInsets.all(5.w),
       decoration: BoxDecoration(
-        color: KColors.primary.shade50,
+        color: KColors.primary.shade700,
         // color: Colors.white,
         borderRadius: BorderRadius.circular(17.r),
         border: Border.all(
-          color: Colors.white,
+          color: KColors.primary.shade700,
+          // color: Colors.white,
           width: 2.w,
         ),
       ),

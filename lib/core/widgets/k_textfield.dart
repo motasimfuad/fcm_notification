@@ -13,6 +13,7 @@ class KTextField extends StatelessWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final Color? bgColor;
+  final int? maxLines;
   const KTextField({
     Key? key,
     this.hintText,
@@ -24,6 +25,7 @@ class KTextField extends StatelessWidget {
     this.controller,
     this.focusNode,
     this.bgColor,
+    this.maxLines,
   }) : super(key: key);
 
   @override
@@ -33,12 +35,16 @@ class KTextField extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       onFieldSubmitted: onSubmitted,
-      textInputAction: textInputAction,
+      textInputAction: textInputAction ?? TextInputAction.next,
       style: TextStyle(
         color: KColors.primaryLight,
       ),
+      maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: TextStyle(
+          color: KColors.primary.shade300,
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.w),
           borderSide: const BorderSide(
@@ -59,10 +65,10 @@ class KTextField extends StatelessWidget {
           ),
         ),
         filled: true,
-        fillColor: bgColor ?? Colors.white,
+        fillColor: bgColor ?? KColors.primary,
         contentPadding: EdgeInsets.symmetric(
-          horizontal: 15.w,
-          vertical: 15.h,
+          horizontal: 18.w,
+          vertical: 16.h,
         ),
         suffixIcon: suffixIcon != null
             ? GestureDetector(

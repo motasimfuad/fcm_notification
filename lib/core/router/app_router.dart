@@ -1,4 +1,5 @@
 import 'package:fcm_notification/features/application/presentation/pages/add_app_page.dart';
+import 'package:fcm_notification/features/application/presentation/pages/application_detail_page.dart';
 import 'package:fcm_notification/features/application/presentation/pages/applications_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +7,7 @@ import 'package:go_router/go_router.dart';
 class AppRouter {
   static const String homePage = '/';
   static const String addApplicationPage = 'add-application';
+  static const String applicationDetailPage = 'app-details';
 }
 
 final router = GoRouter(
@@ -29,6 +31,21 @@ final router = GoRouter(
         return MaterialPage(
           key: state.pageKey,
           child: const AddAppPage(),
+        );
+      },
+    ),
+    GoRoute(
+      name: AppRouter.applicationDetailPage,
+      path: '/${AppRouter.applicationDetailPage}:id',
+      pageBuilder: (context, state) {
+        print(state.params);
+        final id = state.params['id'];
+
+        return MaterialPage(
+          key: state.pageKey,
+          child: ApplicationDetailPage(
+            appId: int.parse(id.toString()),
+          ),
         );
       },
     ),
