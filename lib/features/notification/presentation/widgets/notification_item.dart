@@ -1,3 +1,4 @@
+import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -102,6 +103,12 @@ class NotificationItem extends StatelessWidget {
                         iconColor: KColors.info,
                         onPressed: () {
                           //! Implement later
+                          router.pushNamed(
+                            AppRouter.notificationDetailPage,
+                            params: {
+                              'notificationId': 10.toString(),
+                            },
+                          );
                         },
                       ),
                     ],
