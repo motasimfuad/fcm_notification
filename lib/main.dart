@@ -3,6 +3,7 @@ import 'package:fcm_notification/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,13 +20,15 @@ class MyApp extends StatelessWidget {
       designSize: const Size(393, 851),
       minTextAdapt: true,
       builder: (BuildContext context, Widget? child) {
-        return MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          routeInformationParser: router.routeInformationParser,
-          routerDelegate: router.routerDelegate,
-          routeInformationProvider: router.routeInformationProvider,
-          title: 'FCM Notification',
-          theme: AppTheme.lightTheme,
+        return OverlaySupport.global(
+          child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            routeInformationParser: router.routeInformationParser,
+            routerDelegate: router.routerDelegate,
+            routeInformationProvider: router.routeInformationProvider,
+            title: 'FCM Notification',
+            theme: AppTheme.lightTheme,
+          ),
         );
       },
     );

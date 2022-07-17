@@ -63,7 +63,6 @@ class _AddAppPageState extends State<AddAppPage> {
                 hintText: 'Application Name',
                 controller: _nameController,
               ),
-              SizedBox(height: 25.h),
               KTextField(
                 controller: _serverKeyController,
                 hintText: 'Server Key',
