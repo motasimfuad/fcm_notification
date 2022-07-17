@@ -35,6 +35,7 @@ class ApplicationsPage extends StatelessWidget {
               //     bgColor: KColors.primary,
               //   ),
               // ),
+
               Expanded(
                 child: ListView.builder(
                   keyboardDismissBehavior:
@@ -48,6 +49,7 @@ class ApplicationsPage extends StatelessWidget {
                           params: {'id': 1.toString()},
                         );
                       },
+                      onOptionTap: () {},
                     );
                   },
                 ),

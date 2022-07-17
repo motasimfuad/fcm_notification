@@ -1,3 +1,4 @@
+import 'package:fcm_notification/core/widgets/k_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -88,9 +89,24 @@ class AppListItem extends StatelessWidget {
             hasOptionsBtn == true
                 ? GestureDetector(
                     onTap: onOptionTap,
-                    child: Icon(
-                      Icons.more_vert_outlined,
-                      color: KColors.primaryLight,
+                    child: KMenu(
+                      items: [
+                        kMenuItem(
+                          title: 'Edit',
+                          icon: Icons.edit_rounded,
+                          onPressed: () {},
+                        ),
+                        kMenuItem(
+                          title: 'Delete',
+                          icon: Icons.delete_rounded,
+                          itemColor: Colors.red,
+                          onPressed: () {},
+                        ),
+                      ],
+                      child: Icon(
+                        Icons.more_vert_outlined,
+                        color: KColors.primaryLight,
+                      ),
                     ),
                   )
                 : const SizedBox(),
