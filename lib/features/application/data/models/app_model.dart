@@ -1,29 +1,37 @@
+// ignore_for_file: overridden_fields, annotate_overrides
+
 import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 import 'package:fcm_notification/features/notification/data/models/notification_model.dart';
 import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
+import 'package:hive/hive.dart';
 
+part 'app_model.g.dart';
+
+@HiveType(typeId: 0)
 class AppModel extends AppEntity {
+  @HiveField(0)
+  final String name;
+  @HiveField(1)
+  final String serverKey;
+  @HiveField(2)
+  final Uint8List icon;
+  @HiveField(3)
+  final List<NotificationEntity> notifications;
+
   const AppModel({
-    required String name,
-    required String serverKey,
-    required Uint8List icon,
-    required List<NotificationEntity> notifications,
+    required this.name,
+    required this.serverKey,
+    required this.icon,
+    required this.notifications,
   }) : super(
           name: name,
           serverKey: serverKey,
           icon: icon,
           notifications: notifications,
         );
-
-  // const AppModel({
-  //   required super.name,
-  //   required super.serverKey,
-  //   required super.icon,
-  //   required super.notifications,
-  // });
 
   AppModel copyWith({
     String? name,
@@ -49,14 +57,6 @@ class AppModel extends AppEntity {
           .toList(),
     };
   }
-
-  // ...toJson(){
-  //     final Map<String, dynamic> data = <String, dynamic>{};
-  //     if (this.items != null) {
-  //     data['items'] = this.items.map((v) => ItemModel.fromItem(v).toJson()).toList();
-  //     }
-  //     return data;
-  // }
 
   factory AppModel.fromMap(Map<String, dynamic> map) {
     return AppModel(
