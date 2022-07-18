@@ -6,3 +6,5 @@ abstract class ApplicationEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class GetAllAppsEvent extends ApplicationEvent {}

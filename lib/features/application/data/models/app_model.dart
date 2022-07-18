@@ -13,36 +13,41 @@ part 'app_model.g.dart';
 @HiveType(typeId: 0)
 class AppModel extends AppEntity {
   @HiveField(0)
-  final int id;
+  final String id;
   @HiveField(1)
   final String name;
   @HiveField(2)
   final String serverKey;
   @HiveField(3)
-  final Uint8List icon;
+  final Uint8List? icon;
   @HiveField(4)
-  final List<NotificationEntity> notifications;
+  final List<NotificationEntity?>? notifications;
+  @HiveField(5)
+  final DateTime createdAt;
 
   const AppModel({
     required this.id,
     required this.name,
     required this.serverKey,
-    required this.icon,
-    required this.notifications,
+    this.icon,
+    this.notifications,
+    required this.createdAt,
   }) : super(
           id: id,
           name: name,
           serverKey: serverKey,
           icon: icon,
           notifications: notifications,
+          createdAt: createdAt,
         );
 
   AppModel copyWith({
-    int? id,
+    String? id,
     String? name,
     String? serverKey,
     Uint8List? icon,
     List<NotificationEntity>? notifications,
+    DateTime? createdAt,
   }) {
     return AppModel(
       id: id ?? this.id,
@@ -50,6 +55,7 @@ class AppModel extends AppEntity {
       serverKey: serverKey ?? this.serverKey,
       icon: icon ?? this.icon,
       notifications: notifications ?? this.notifications,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -58,10 +64,13 @@ class AppModel extends AppEntity {
       'id': id,
       'name': name,
       'serverKey': serverKey,
-      'icon': icon.toList(),
-      'notifications': notifications
-          .map((x) => NotificationModel.fromNotificationEntity(x).toMap())
-          .toList(),
+      'icon': icon?.toList(),
+      'notifications': (notifications != null && notifications!.isNotEmpty)
+          ? notifications!
+              .map((x) => NotificationModel.fromNotificationEntity(x!).toMap())
+              .toList()
+          : null,
+      'createdAt': createdAt.millisecondsSinceEpoch,
     };
   }
 
@@ -73,6 +82,29 @@ class AppModel extends AppEntity {
       icon: Uint8List.fromList(map['icon']),
       notifications: List<NotificationModel>.from(
           map['notifications']?.map((x) => NotificationModel.fromMap(x))),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
+    );
+  }
+
+  factory AppModel.fromEntity(AppEntity entity) {
+    return AppModel(
+      id: entity.id,
+      name: entity.name,
+      serverKey: entity.serverKey,
+      icon: entity.icon,
+      notifications: entity.notifications,
+      createdAt: entity.createdAt,
+    );
+  }
+
+  AppEntity toEntity() {
+    return AppEntity(
+      id: id,
+      name: name,
+      serverKey: serverKey,
+      icon: icon,
+      notifications: notifications,
+      createdAt: createdAt,
     );
   }
 
@@ -83,6 +115,6 @@ class AppModel extends AppEntity {
 
   @override
   String toString() {
-    return 'AppModel(id: $id, name: $name, serverKey: $serverKey, icon: $icon, notifications: $notifications)';
+    return 'AppModel(id: $id, name: $name, serverKey: $serverKey, icon: $icon, notifications: $notifications), createdAt: $createdAt)';
   }
 }

@@ -5,8 +5,8 @@ import '../../../../core/errors/failures.dart';
 
 abstract class AppRepository {
   Future<Either<Failure, List<AppEntity>>> getAllApps();
-  Future<Either<Failure, AppEntity>> getApp({required int id});
+  Future<Either<Failure, AppEntity>> getApp({required String id});
   Future<Either<Failure, void>> createApp({required AppEntity app});
   Future<Either<Failure, void>> updateApp({required AppEntity app});
-  Future<Either<Failure, void>> deleteApp({required int id});
+  Future<Either<Failure, void>> deleteApp({required String id});
 }

@@ -64,6 +64,7 @@ class KTextField extends StatelessWidget {
           child: TextFormField(
             autofocus: autofocus,
             controller: controller,
+            cursorColor: KColors.secondary,
             onChanged: onChanged,
             focusNode: focusNode,
             onFieldSubmitted: onSubmitted,

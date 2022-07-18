@@ -18,7 +18,7 @@ class NoParams extends Equatable {
 }
 
 class Params extends Equatable {
-  final int? id;
+  final String? id;
   final AppEntity? app;
   final NotificationEntity? notification;
   const Params({
