@@ -41,10 +41,16 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
             right: 15.w,
             top: 15.w,
           ),
-          child: BlocBuilder<ApplicationBloc, ApplicationState>(
+          child: BlocConsumer<ApplicationBloc, ApplicationState>(
+            listener: (context, state) {
+              if (state is AppDeleted) {
+                context.read<ApplicationBloc>().add(GetAllAppsEvent());
+              }
+            },
             builder: (context, state) {
               if (state is AppListLoaded) {
                 allApps = state.apps;
+                allApps.sort((a, b) => -a.createdAt.compareTo(b.createdAt));
               }
 
               return RefreshIndicator(
@@ -83,10 +89,15 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                                   onTap: () {
                                     router.pushNamed(
                                       AppRouter.applicationDetailPage,
-                                      params: {'id': 1.toString()},
+                                      params: {'id': app.id},
                                     );
                                   },
-                                  onOptionTap: () {},
+                                  onDeleteTap: () {
+                                    context.read<ApplicationBloc>().add(
+                                          DeleteAppEvent(app.id),
+                                        );
+                                  },
+                                  onEditTap: () {},
                                 );
                               },
                             ),

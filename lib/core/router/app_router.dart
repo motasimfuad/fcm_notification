@@ -48,7 +48,7 @@ final router = GoRouter(
         return MaterialPage(
           key: state.pageKey,
           child: ApplicationDetailPage(
-            appId: int.parse(id.toString()),
+            appId: id,
           ),
         );
       },

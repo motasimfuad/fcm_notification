@@ -2,13 +2,16 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fcm_notification/core/constants/colors.dart';
+import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/core/widgets/k_image_container.dart';
 import 'package:fcm_notification/core/widgets/k_textfield.dart';
 import 'package:fcm_notification/features/application/data/models/app_model.dart';
 import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
+import 'package:fcm_notification/features/application/presentation/bloc/application_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
@@ -112,8 +115,11 @@ class _AddAppPageState extends State<AddAppPage> {
 
           // print('added $added');
 
-          await appBox.clear();
+          // await appBox.clear();
           print('save');
+
+          context.read<ApplicationBloc>().add(GetAllAppsEvent());
+          router.goNamed(AppRouter.homePage);
         },
       ),
     );

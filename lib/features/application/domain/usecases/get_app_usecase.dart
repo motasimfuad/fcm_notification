@@ -5,9 +5,7 @@ import '../repositories/app_repository.dart';
 
 class GetAppUsecase extends Usecase<AppEntity, Params> {
   final AppRepository repository;
-  GetAppUsecase({
-    required this.repository,
-  });
+  GetAppUsecase(this.repository);
 
   @override
   Future<Either<Failure, AppEntity>> call(Params params) async {

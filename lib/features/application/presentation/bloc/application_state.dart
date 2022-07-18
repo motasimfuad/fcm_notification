@@ -24,3 +24,28 @@ class AppListLoadingFailed extends ApplicationState {
   @override
   List<Object> get props => [message];
 }
+
+class AppLoading extends ApplicationState {}
+
+class AppLoaded extends ApplicationState {
+  final AppEntity app;
+  const AppLoaded({required this.app});
+  @override
+  List<Object> get props => [app];
+}
+
+class AppLoadingFailed extends ApplicationState {
+  final String message;
+  const AppLoadingFailed({required this.message});
+  @override
+  List<Object> get props => [message];
+}
+
+class AppDeleted extends ApplicationState {}
+
+class AppDeletingFailed extends ApplicationState {
+  final String message;
+  const AppDeletingFailed({required this.message});
+  @override
+  List<Object> get props => [message];
+}

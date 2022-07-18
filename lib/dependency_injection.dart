@@ -1,6 +1,10 @@
 import 'package:fcm_notification/core/constants/strings.dart';
 import 'package:fcm_notification/features/application/data/repositories/app_repository_impl.dart';
 import 'package:fcm_notification/features/application/domain/repositories/app_repository.dart';
+import 'package:fcm_notification/features/application/domain/usecases/create_app_usecase.dart';
+import 'package:fcm_notification/features/application/domain/usecases/delete_app_usecase.dart';
+import 'package:fcm_notification/features/application/domain/usecases/get_app_usecase.dart';
+import 'package:fcm_notification/features/application/domain/usecases/update_app_usecase.dart';
 import 'package:fcm_notification/features/application/presentation/bloc/application_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
@@ -17,11 +21,19 @@ Future<void> init() async {
   getIt.registerFactory(
     () => ApplicationBloc(
       getAllApps: getIt(),
+      createApp: getIt(),
+      deleteApp: getIt(),
+      getApp: getIt(),
+      updateApp: getIt(),
     ),
   );
 
   // usecases
   getIt.registerLazySingleton(() => GetAllAppsUsecase(getIt()));
+  getIt.registerLazySingleton(() => GetAppUsecase(getIt()));
+  getIt.registerLazySingleton(() => CreateAppUsecase(getIt()));
+  getIt.registerLazySingleton(() => DeleteAppUsecase(getIt()));
+  getIt.registerLazySingleton(() => UpdateAppUsecase(getIt()));
 
   // repositories
   getIt.registerLazySingleton<AppRepository>(

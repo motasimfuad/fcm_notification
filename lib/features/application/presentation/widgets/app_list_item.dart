@@ -20,6 +20,8 @@ class AppListItem extends StatelessWidget {
   final Color? titleColor;
   final Function()? onTap;
   final Function()? onOptionTap;
+  final Function()? onEditTap;
+  final Function()? onDeleteTap;
   final int? maxLines;
   const AppListItem({
     Key? key,
@@ -33,6 +35,8 @@ class AppListItem extends StatelessWidget {
     this.titleColor,
     this.onTap,
     this.onOptionTap,
+    this.onEditTap,
+    this.onDeleteTap,
     this.maxLines,
   }) : super(key: key);
 
@@ -56,14 +60,15 @@ class AppListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const AppListImage(),
+                  AppListImage(
+                    image: app?.icon,
+                  ),
                   SizedBox(width: 10.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.min,
                       children: [
+                        SizedBox(height: 5.h),
                         KBadge(
                           badgeText:
                               "${(app?.notifications == null) ? 0 : app?.notifications?.length} Notifications",
@@ -98,13 +103,13 @@ class AppListItem extends StatelessWidget {
                         kMenuItem(
                           title: 'Edit',
                           icon: Icons.edit_rounded,
-                          onPressed: () {},
+                          onPressed: onEditTap ?? () {},
                         ),
                         kMenuItem(
                           title: 'Delete',
                           icon: Icons.delete_rounded,
                           itemColor: Colors.red,
-                          onPressed: () {},
+                          onPressed: onDeleteTap ?? () {},
                         ),
                       ],
                       child: Icon(

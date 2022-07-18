@@ -15,3 +15,10 @@ class GetAppEvent extends ApplicationEvent {
   @override
   List<Object> get props => [appId];
 }
+
+class DeleteAppEvent extends ApplicationEvent {
+  final String appId;
+  const DeleteAppEvent(this.appId);
+  @override
+  List<Object> get props => [appId];
+}
