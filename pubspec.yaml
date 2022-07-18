@@ -32,6 +32,7 @@ dependencies:
   build_runner: ^2.2.0
   cached_network_image: ^3.2.1
   cupertino_icons: ^1.0.2
+  dartz: ^0.10.1
   equatable: ^2.0.3
   flash: ^2.0.3+2
   flutter:
