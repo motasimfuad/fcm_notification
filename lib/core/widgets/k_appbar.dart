@@ -36,6 +36,7 @@ class KAppbar extends StatelessWidget implements PreferredSizeWidget {
               title,
               style: TextStyle(
                 color: titleColor,
+                fontWeight: FontWeight.w600,
               ),
             ),
       elevation: elevation ?? 0,
