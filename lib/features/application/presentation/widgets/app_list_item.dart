@@ -1,14 +1,16 @@
-import 'package:fcm_notification/core/widgets/k_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:fcm_notification/core/widgets/k_badge.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
+import 'package:fcm_notification/core/widgets/k_menu.dart';
+import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 import 'package:fcm_notification/features/application/presentation/widgets/app_list_image.dart';
 
 import '../../../../core/constants/colors.dart';
 
 class AppListItem extends StatelessWidget {
+  final AppEntity? app;
   final double? xPadding;
   final double? yPadding;
   final double? titleSize;
@@ -21,6 +23,7 @@ class AppListItem extends StatelessWidget {
   final int? maxLines;
   const AppListItem({
     Key? key,
+    this.app,
     this.xPadding,
     this.yPadding,
     this.titleSize,
@@ -62,7 +65,8 @@ class AppListItem extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         KBadge(
-                          badgeText: "0 Notifications",
+                          badgeText:
+                              "${(app?.notifications == null) ? 0 : app?.notifications?.length} Notifications",
                           radius: 10.r,
                           textSize: subtitleSize ?? 12.sp,
                           badgeColor: KColors.primary.shade700,
@@ -71,7 +75,7 @@ class AppListItem extends StatelessWidget {
                         ),
                         SizedBox(height: 7.h),
                         Text(
-                          'Name akdshf aa adfName akdshf aa  Name akdshf aa ',
+                          app?.name ?? '',
                           maxLines: maxLines ?? 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

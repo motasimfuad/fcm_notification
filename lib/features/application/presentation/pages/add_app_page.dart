@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fcm_notification/core/constants/colors.dart';
-import 'package:fcm_notification/core/constants/strings.dart';
 import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/core/widgets/k_image_container.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../core/constants/strings.dart';
 import '../../../../core/widgets/k_fab.dart';
 
 class AddAppPage extends StatefulWidget {
@@ -28,11 +28,8 @@ class _AddAppPageState extends State<AddAppPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _serverKeyController = TextEditingController();
 
-  late Box<AppEntity> appBox;
-
   @override
   void initState() {
-    appBox = Hive.box<AppEntity>(Strings.appBox);
     super.initState();
   }
 
@@ -49,7 +46,6 @@ class _AddAppPageState extends State<AddAppPage> {
               KCard(
                 color: KColors.primary,
                 onTap: () {
-                  print("App box - ${appBox.values}");
                   print('tap');
                 },
                 height: 120.w,
@@ -92,6 +88,7 @@ class _AddAppPageState extends State<AddAppPage> {
         label: 'SAVE',
         icon: Icons.data_saver_on_rounded,
         onPressed: () async {
+          var appBox = Hive.box<AppModel>(Strings.appBox);
           //! for testing
           var image = await _image?.readAsBytes();
           var appEntity = AppEntity(
@@ -108,11 +105,14 @@ class _AddAppPageState extends State<AddAppPage> {
             icon: appEntity.icon,
             createdAt: appEntity.createdAt,
           );
-          var added = await appBox.add(appModel);
+          var added = await appBox.put(appModel.id, appModel);
+          for (var element in appBox.values) {
+            print(element);
+          }
 
           // print('added $added');
 
-          // await appBox.delete(appModel.id);
+          await appBox.clear();
           print('save');
         },
       ),

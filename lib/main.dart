@@ -1,3 +1,4 @@
+import 'package:fcm_notification/all_providers.dart';
 import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:fcm_notification/core/themes/app_theme.dart';
 import 'package:fcm_notification/dependency_injection.dart' as di;
@@ -25,13 +26,15 @@ class MyApp extends StatelessWidget {
       designSize: const Size(393, 851),
       minTextAdapt: true,
       builder: (BuildContext context, Widget? child) {
-        return MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          routeInformationParser: router.routeInformationParser,
-          routerDelegate: router.routerDelegate,
-          routeInformationProvider: router.routeInformationProvider,
-          title: 'FCM Notification',
-          theme: AppTheme.lightTheme,
+        return AllProviders(
+          child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            routeInformationParser: router.routeInformationParser,
+            routerDelegate: router.routerDelegate,
+            routeInformationProvider: router.routeInformationProvider,
+            title: 'FCM Notification',
+            theme: AppTheme.lightTheme,
+          ),
         );
       },
     );
