@@ -77,7 +77,6 @@ class KImageContainer extends StatelessWidget {
                   width: 0,
                 ),
         ),
-        // child: buildNetworkImage(),
         child: buildImage(imageType),
       ),
     );

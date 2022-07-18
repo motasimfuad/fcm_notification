@@ -17,20 +17,20 @@ class AppListImage extends StatelessWidget {
     return Container(
       height: 65.w,
       width: 65.w,
-      padding: EdgeInsets.all(5.w),
+      padding: EdgeInsets.all(2.w),
       decoration: BoxDecoration(
         color: KColors.primary.shade700,
         // color: Colors.white,
-        borderRadius: BorderRadius.circular(17.r),
+        borderRadius: BorderRadius.circular(15.r),
         border: Border.all(
           color: KColors.primary.shade700,
           // color: Colors.white,
-          width: 2.w,
+          width: 1.w,
         ),
       ),
       child: ClipRRect(
         clipBehavior: Clip.antiAlias,
-        borderRadius: BorderRadius.circular(15.r),
+        borderRadius: BorderRadius.circular(14.r),
         child: Image.memory(
           image ?? Uint8List.fromList([]),
           fit: BoxFit.cover,

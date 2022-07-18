@@ -47,86 +47,92 @@ class AppListItem extends StatelessWidget {
         bottom: 18.h,
       ),
       child: KCard(
-        xPadding: xPadding ?? 12.w,
-        yPadding: yPadding ?? 10.h,
+        xPadding: 0.w,
+        yPadding: 0.h,
         color: bgColor ?? KColors.primary,
         radius: 20.r,
         onTap: onTap,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  AppListImage(
-                    image: app?.icon,
-                  ),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 5.h),
-                        KBadge(
-                          badgeText:
-                              "${(app?.notifications == null) ? 0 : app?.notifications?.length} Notifications",
-                          radius: 10.r,
-                          textSize: subtitleSize ?? 12.sp,
-                          badgeColor: KColors.primary.shade700,
-                          textColor: KColors.secondary,
-                          yPadding: 5.h,
-                        ),
-                        SizedBox(height: 7.h),
-                        Text(
-                          app?.name ?? '',
-                          maxLines: maxLines ?? 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: titleColor ?? KColors.primary.shade200,
-                            fontWeight: FontWeight.bold,
-                            fontSize: titleSize ?? 18.sp,
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: xPadding ?? 12.w,
+            vertical: yPadding ?? 10.h,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    AppListImage(
+                      image: app?.icon,
+                    ),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 5.h),
+                          KBadge(
+                            badgeText:
+                                "${(app?.notifications == null) ? 0 : app?.notifications?.length} Notifications",
+                            radius: 10.r,
+                            textSize: subtitleSize ?? 12.sp,
+                            badgeColor: KColors.primary.shade700,
+                            textColor: KColors.secondary,
+                            yPadding: 5.h,
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            hasOptionsBtn == true
-                ? GestureDetector(
-                    onTap: onOptionTap,
-                    child: KMenu(
-                      items: [
-                        kMenuItem(
-                          title: 'Edit',
-                          icon: Icons.edit_rounded,
-                          onPressed: onEditTap ?? () {},
-                        ),
-                        kMenuItem(
-                          title: 'Delete',
-                          icon: Icons.delete_rounded,
-                          itemColor: Colors.red,
-                          onPressed: onDeleteTap ?? () {},
-                        ),
-                      ],
-                      child: Icon(
-                        Icons.more_vert_outlined,
-                        color: KColors.primaryLight,
+                          SizedBox(height: 7.h),
+                          Text(
+                            app?.name ?? '',
+                            maxLines: maxLines ?? 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: titleColor ?? KColors.primary.shade200,
+                              fontWeight: FontWeight.bold,
+                              fontSize: titleSize ?? 18.sp,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  )
-                : const SizedBox(),
-            // IconButton(
-            //   onPressed: () {},
-            //   icon: const Icon(
-            //     Icons.more_vert_outlined,
-            //     color: Colors.white,
-            //   ),
-            // )
-          ],
+                    )
+                  ],
+                ),
+              ),
+              hasOptionsBtn == true
+                  ? GestureDetector(
+                      onTap: onOptionTap,
+                      child: KMenu(
+                        items: [
+                          kMenuItem(
+                            title: 'Edit',
+                            icon: Icons.edit_rounded,
+                            onPressed: onEditTap ?? () {},
+                          ),
+                          kMenuItem(
+                            title: 'Delete',
+                            icon: Icons.delete_rounded,
+                            itemColor: Colors.red,
+                            onPressed: onDeleteTap ?? () {},
+                          ),
+                        ],
+                        child: Icon(
+                          Icons.more_vert_outlined,
+                          color: KColors.primaryLight,
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+              // IconButton(
+              //   onPressed: () {},
+              //   icon: const Icon(
+              //     Icons.more_vert_outlined,
+              //     color: Colors.white,
+              //   ),
+              // )
+            ],
+          ),
         ),
       ),
     );

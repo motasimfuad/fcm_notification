@@ -22,3 +22,12 @@ class DeleteAppEvent extends ApplicationEvent {
   @override
   List<Object> get props => [appId];
 }
+
+class AddAppIconEvent extends ApplicationEvent {}
+
+class CreateAppEvent extends ApplicationEvent {
+  final AppEntity appEntity;
+  const CreateAppEvent(this.appEntity);
+  @override
+  List<Object> get props => [appEntity];
+}
