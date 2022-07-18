@@ -17,24 +17,27 @@ class AppModelAdapter extends TypeAdapter<AppModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AppModel(
-      name: fields[0] as String,
-      serverKey: fields[1] as String,
-      icon: fields[2] as Uint8List,
-      notifications: (fields[3] as List).cast<NotificationEntity>(),
+      id: fields[0] as int,
+      name: fields[1] as String,
+      serverKey: fields[2] as String,
+      icon: fields[3] as Uint8List,
+      notifications: (fields[4] as List).cast<NotificationEntity>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, AppModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.serverKey)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.icon)
+      ..write(obj.serverKey)
       ..writeByte(3)
+      ..write(obj.icon)
+      ..writeByte(4)
       ..write(obj.notifications);
   }
 

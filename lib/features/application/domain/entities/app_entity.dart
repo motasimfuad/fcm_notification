@@ -5,12 +5,14 @@ import 'package:equatable/equatable.dart';
 import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
 
 class AppEntity extends Equatable {
+  final int id;
   final String name;
   final String serverKey;
   final Uint8List icon;
   final List<NotificationEntity> notifications;
 
   const AppEntity({
+    required this.id,
     required this.name,
     required this.serverKey,
     required this.icon,

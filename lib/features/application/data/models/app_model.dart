@@ -13,20 +13,24 @@ part 'app_model.g.dart';
 @HiveType(typeId: 0)
 class AppModel extends AppEntity {
   @HiveField(0)
-  final String name;
+  final int id;
   @HiveField(1)
-  final String serverKey;
+  final String name;
   @HiveField(2)
-  final Uint8List icon;
+  final String serverKey;
   @HiveField(3)
+  final Uint8List icon;
+  @HiveField(4)
   final List<NotificationEntity> notifications;
 
   const AppModel({
+    required this.id,
     required this.name,
     required this.serverKey,
     required this.icon,
     required this.notifications,
   }) : super(
+          id: id,
           name: name,
           serverKey: serverKey,
           icon: icon,
@@ -34,12 +38,14 @@ class AppModel extends AppEntity {
         );
 
   AppModel copyWith({
+    int? id,
     String? name,
     String? serverKey,
     Uint8List? icon,
     List<NotificationEntity>? notifications,
   }) {
     return AppModel(
+      id: id ?? this.id,
       name: name ?? this.name,
       serverKey: serverKey ?? this.serverKey,
       icon: icon ?? this.icon,
@@ -49,6 +55,7 @@ class AppModel extends AppEntity {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'serverKey': serverKey,
       'icon': icon.toList(),
@@ -60,6 +67,7 @@ class AppModel extends AppEntity {
 
   factory AppModel.fromMap(Map<String, dynamic> map) {
     return AppModel(
+      id: map['id'],
       name: map['name'] ?? '',
       serverKey: map['serverKey'] ?? '',
       icon: Uint8List.fromList(map['icon']),
@@ -75,6 +83,6 @@ class AppModel extends AppEntity {
 
   @override
   String toString() {
-    return 'AppModel(name: $name, serverKey: $serverKey, icon: $icon, notifications: $notifications)';
+    return 'AppModel(id: $id, name: $name, serverKey: $serverKey, icon: $icon, notifications: $notifications)';
   }
 }
