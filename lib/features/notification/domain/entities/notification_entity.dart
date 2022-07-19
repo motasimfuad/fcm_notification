@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class NotificationEntity extends Equatable {
+  final String appId;
   final String id;
   final String name;
   final String? topicName;
@@ -8,6 +9,7 @@ class NotificationEntity extends Equatable {
 
   final String? title;
   final String? body;
+  final String? imageUrl;
 
   final String? dataKey;
   final String? dataValue;
@@ -16,12 +18,14 @@ class NotificationEntity extends Equatable {
   final DateTime? lastSentAt;
 
   const NotificationEntity({
+    required this.appId,
     required this.id,
     required this.name,
     this.topicName,
     this.deviceId,
     this.title,
     this.body,
+    this.imageUrl,
     this.dataKey,
     this.dataValue,
     required this.createdAt,
