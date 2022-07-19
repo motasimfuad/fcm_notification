@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,10 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fcm_notification/core/constants/colors.dart';
 
 class AppListImage extends StatelessWidget {
-  final Uint8List? image;
+  final String? imageName;
   const AppListImage({
     Key? key,
-    required this.image,
+    required this.imageName,
   }) : super(key: key);
 
   @override
@@ -31,8 +31,8 @@ class AppListImage extends StatelessWidget {
       child: ClipRRect(
         clipBehavior: Clip.antiAlias,
         borderRadius: BorderRadius.circular(14.r),
-        child: Image.memory(
-          image ?? Uint8List.fromList([]),
+        child: Image.file(
+          File(imageName ?? ''),
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
             return Center(

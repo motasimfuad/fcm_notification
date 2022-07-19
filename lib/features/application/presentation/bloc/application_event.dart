@@ -31,3 +31,10 @@ class CreateAppEvent extends ApplicationEvent {
   @override
   List<Object> get props => [appEntity];
 }
+
+class UpdateAppEvent extends ApplicationEvent {
+  final AppEntity appEntity;
+  const UpdateAppEvent(this.appEntity);
+  @override
+  List<Object> get props => [appEntity];
+}

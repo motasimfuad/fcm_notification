@@ -20,8 +20,8 @@ class AppModelAdapter extends TypeAdapter<AppModel> {
       id: fields[0] as String,
       name: fields[1] as String,
       serverKey: fields[2] as String,
-      icon: fields[3] as Uint8List?,
-      notifications: (fields[4] as List?)?.cast<NotificationEntity>(),
+      iconName: fields[3] as String?,
+      notifications: (fields[4] as List?)?.cast<NotificationEntity?>(),
       createdAt: fields[5] as DateTime,
     );
   }
@@ -37,7 +37,7 @@ class AppModelAdapter extends TypeAdapter<AppModel> {
       ..writeByte(2)
       ..write(obj.serverKey)
       ..writeByte(3)
-      ..write(obj.icon)
+      ..write(obj.iconName)
       ..writeByte(4)
       ..write(obj.notifications)
       ..writeByte(5)

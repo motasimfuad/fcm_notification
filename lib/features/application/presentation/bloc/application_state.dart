@@ -54,11 +54,9 @@ class AppDeletingFailed extends ApplicationState {
 class AppIconLoading extends ApplicationState {}
 
 class AppIconAddedState extends ApplicationState {
-  final File? iconFile;
-  final Uint8List? convertedIcon;
+  final String? iconName;
   const AppIconAddedState({
-    this.iconFile,
-    this.convertedIcon,
+    this.iconName,
   });
   @override
   List<Object> get props => [];
@@ -77,6 +75,16 @@ class AppCreatedState extends ApplicationState {}
 class AppCreatingFailed extends ApplicationState {
   final String message;
   const AppCreatingFailed({required this.message});
+  @override
+  List<Object> get props => [message];
+}
+
+// update app
+class AppUpdatedState extends ApplicationState {}
+
+class AppUpdatingFailed extends ApplicationState {
+  final String message;
+  const AppUpdatingFailed({required this.message});
   @override
   List<Object> get props => [message];
 }

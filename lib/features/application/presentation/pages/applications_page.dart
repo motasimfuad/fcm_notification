@@ -97,7 +97,12 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                                           DeleteAppEvent(app.id),
                                         );
                                   },
-                                  onEditTap: () {},
+                                  onEditTap: () {
+                                    router.pushNamed(
+                                      AppRouter.applicationEditPage,
+                                      params: {'id': app.id},
+                                    );
+                                  },
                                 );
                               },
                             ),

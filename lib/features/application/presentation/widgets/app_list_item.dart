@@ -65,8 +65,11 @@ class AppListItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    AppListImage(
-                      image: app?.icon,
+                    Hero(
+                      tag: '${app?.id}',
+                      child: AppListImage(
+                        imageName: app?.iconName,
+                      ),
                     ),
                     SizedBox(width: 10.w),
                     Expanded(

@@ -10,6 +10,7 @@ class AppRouter {
   static const String homePage = '/';
   static const String addApplicationPage = 'add-application';
   static const String applicationDetailPage = 'app-details';
+  static const String applicationEditPage = 'edit-app';
   static const String createNotificationPage = 'create-notification';
   static const String notificationDetailPage = 'notification-details';
 }
@@ -28,6 +29,8 @@ final router = GoRouter(
         );
       },
     ),
+
+    // Add Application Page
     GoRoute(
       name: AppRouter.addApplicationPage,
       path: '/${AppRouter.addApplicationPage}',
@@ -38,11 +41,25 @@ final router = GoRouter(
         );
       },
     ),
+
+    // application edit page
+    GoRoute(
+      name: AppRouter.applicationEditPage,
+      path: '/${AppRouter.applicationEditPage}/:id',
+      pageBuilder: (context, state) {
+        final id = state.params['id'];
+        return MaterialPage(
+          key: state.pageKey,
+          child: AddAppPage(id: id),
+        );
+      },
+    ),
+
+    // application detail page
     GoRoute(
       name: AppRouter.applicationDetailPage,
       path: '/${AppRouter.applicationDetailPage}:id',
       pageBuilder: (context, state) {
-        print(state.params);
         final id = state.params['id'];
 
         return MaterialPage(
@@ -53,6 +70,8 @@ final router = GoRouter(
         );
       },
     ),
+
+    // notification detail page
     GoRoute(
       name: AppRouter.notificationDetailPage,
       path: '/${AppRouter.notificationDetailPage}:notificationId',

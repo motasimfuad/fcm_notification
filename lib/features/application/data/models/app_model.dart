@@ -1,7 +1,6 @@
 // ignore_for_file: overridden_fields, annotate_overrides
 
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 import 'package:fcm_notification/features/notification/data/models/notification_model.dart';
@@ -19,7 +18,7 @@ class AppModel extends AppEntity {
   @HiveField(2)
   final String serverKey;
   @HiveField(3)
-  final Uint8List? icon;
+  final String? iconName;
   @HiveField(4)
   final List<NotificationEntity?>? notifications;
   @HiveField(5)
@@ -29,14 +28,14 @@ class AppModel extends AppEntity {
     required this.id,
     required this.name,
     required this.serverKey,
-    this.icon,
+    this.iconName,
     this.notifications,
     required this.createdAt,
   }) : super(
           id: id,
           name: name,
           serverKey: serverKey,
-          icon: icon,
+          iconName: iconName,
           notifications: notifications,
           createdAt: createdAt,
         );
@@ -45,7 +44,7 @@ class AppModel extends AppEntity {
     String? id,
     String? name,
     String? serverKey,
-    Uint8List? icon,
+    String? iconName,
     List<NotificationEntity>? notifications,
     DateTime? createdAt,
   }) {
@@ -53,7 +52,7 @@ class AppModel extends AppEntity {
       id: id ?? this.id,
       name: name ?? this.name,
       serverKey: serverKey ?? this.serverKey,
-      icon: icon ?? this.icon,
+      iconName: iconName ?? this.iconName,
       notifications: notifications ?? this.notifications,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -64,7 +63,7 @@ class AppModel extends AppEntity {
       'id': id,
       'name': name,
       'serverKey': serverKey,
-      'icon': icon?.toList(),
+      'iconName': iconName,
       'notifications': (notifications != null && notifications!.isNotEmpty)
           ? notifications!
               .map((x) => NotificationModel.fromNotificationEntity(x!).toMap())
@@ -79,7 +78,7 @@ class AppModel extends AppEntity {
       id: map['id'],
       name: map['name'] ?? '',
       serverKey: map['serverKey'] ?? '',
-      icon: Uint8List.fromList(map['icon']),
+      iconName: map['iconName'] ?? '',
       notifications: List<NotificationModel>.from(
           map['notifications']?.map((x) => NotificationModel.fromMap(x))),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
@@ -91,7 +90,7 @@ class AppModel extends AppEntity {
       id: entity.id,
       name: entity.name,
       serverKey: entity.serverKey,
-      icon: entity.icon,
+      iconName: entity.iconName,
       notifications: entity.notifications,
       createdAt: entity.createdAt,
     );
@@ -102,7 +101,7 @@ class AppModel extends AppEntity {
       id: id,
       name: name,
       serverKey: serverKey,
-      icon: icon,
+      iconName: iconName,
       notifications: notifications,
       createdAt: createdAt,
     );
@@ -115,6 +114,6 @@ class AppModel extends AppEntity {
 
   @override
   String toString() {
-    return 'AppModel(id: $id, name: $name, serverKey: $serverKey, icon: $icon, notifications: $notifications), createdAt: $createdAt)';
+    return 'AppModel(id: $id, name: $name, serverKey: $serverKey, iconName: $iconName, notifications: $notifications), createdAt: $createdAt)';
   }
 }

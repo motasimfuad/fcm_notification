@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -11,6 +10,7 @@ import 'package:fcm_notification/features/application/domain/usecases/get_all_ap
 import 'package:fcm_notification/features/application/domain/usecases/update_app_usecase.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/usecases/get_app_usecase.dart';
@@ -65,32 +65,30 @@ class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
       if (event is AddAppIconEvent) {
         emit(AppIconLoading());
         try {
-          print('step 1');
           final image = await ImagePicker().pickImage(
             source: ImageSource.gallery,
             imageQuality: 100,
           );
-          print('step 2');
           if (image == null) {
-            print('step null');
             emit(const AppIconAddedState(
-              iconFile: null,
-              convertedIcon: null,
+              iconName: null,
             ));
             return;
           } else {
-            print('step 3');
-            var tempImage = File(image.path);
-            print('step 4');
-            final convertedIcon = await tempImage.readAsBytes();
-            print('step 5');
+            Directory appDocumentsDirectory =
+                await getApplicationDocumentsDirectory();
+
+            final iconFile = File(
+                '${appDocumentsDirectory.path}/${image.path.split('/').last}');
+
+            var newIconFile =
+                await iconFile.writeAsBytes(await image.readAsBytes());
+
             emit(AppIconAddedState(
-              iconFile: tempImage,
-              convertedIcon: convertedIcon,
+              iconName: newIconFile.path,
             ));
           }
         } on PlatformException catch (e) {
-          print('step exception');
           emit(AppIconAddingFailed(message: 'Failed to add icon ${e.message}'));
         }
       }
@@ -102,6 +100,16 @@ class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
         result.fold(
           (l) => emit(AppCreatingFailed(message: l.toString())),
           (r) => emit(AppCreatedState()),
+        );
+      }
+
+      // Update app
+      if (event is UpdateAppEvent) {
+        emit(AppLoading());
+        final result = await updateApp(Params(app: event.appEntity));
+        result.fold(
+          (l) => emit(AppUpdatingFailed(message: l.toString())),
+          (r) => emit(AppUpdatedState()),
         );
       }
     });
