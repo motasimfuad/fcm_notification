@@ -16,8 +16,8 @@ import '../../../../core/widgets/k_fab.dart';
 import '../../../../core/widgets/k_textfield.dart';
 
 class AddAppPage extends StatefulWidget {
-  String? id;
-  AddAppPage({
+  final String? id;
+  const AddAppPage({
     Key? key,
     this.id,
   }) : super(key: key);
@@ -43,16 +43,6 @@ class _AddAppPageState extends State<AddAppPage> {
       context.read<ApplicationBloc>().add(GetAppEvent(widget.id!));
     }
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    // widget.id = null;
-    // _nameController.dispose();
-    // _serverKeyController.dispose();
-    // _iconName = null;
-    // _stateApp = null;
-    super.dispose();
   }
 
   @override
