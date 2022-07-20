@@ -3,22 +3,38 @@
 import 'dart:convert';
 
 import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
+import 'package:hive/hive.dart';
 
+part 'notification_model.g.dart';
+
+@HiveType(typeId: 1)
 class NotificationModel extends NotificationEntity {
+  @HiveField(0)
   final String appId;
+  @HiveField(1)
   final String id;
+  @HiveField(2)
   final String name;
+  @HiveField(3)
   final String? topicName;
+  @HiveField(4)
   final String? deviceId;
 
+  @HiveField(5)
   final String? title;
+  @HiveField(6)
   final String? body;
+  @HiveField(7)
   final String? imageUrl;
 
+  @HiveField(8)
   final String? dataKey;
+  @HiveField(9)
   final String? dataValue;
 
+  @HiveField(10)
   final DateTime createdAt;
+  @HiveField(11)
   final DateTime? lastSentAt;
 
   const NotificationModel({
