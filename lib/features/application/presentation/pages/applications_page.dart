@@ -2,6 +2,7 @@ import 'package:fcm_notification/core/constants/colors.dart';
 import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/core/widgets/k_fab.dart';
+import 'package:fcm_notification/core/widgets/k_refresher.dart';
 import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 import 'package:fcm_notification/features/application/presentation/bloc/application_bloc.dart';
 import 'package:fcm_notification/features/application/presentation/widgets/app_list_item.dart';
@@ -53,7 +54,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                 allApps.sort((a, b) => -a.createdAt.compareTo(b.createdAt));
               }
 
-              return RefreshIndicator(
+              return KRefresher(
                 onRefresh: () async {
                   context.read<ApplicationBloc>().add(GetAllAppsEvent());
                 },

@@ -11,6 +11,7 @@ import 'package:fcm_notification/features/application/presentation/widgets/app_l
 
 import '../../../../core/widgets/k_appbar.dart';
 import '../../../../core/widgets/k_fab.dart';
+import '../../../../core/widgets/k_refresher.dart';
 import '../../../notification/presentation/widgets/notification_item.dart';
 import '../widgets/new_notification_icon.dart';
 
@@ -122,37 +123,52 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                           ),
                         )
                       : const SizedBox(),
-                  (app?.notifications != null)
-                      ? Expanded(
-                          child: ListView.builder(
-                            itemCount: app?.notifications?.length,
-                            keyboardDismissBehavior:
-                                ScrollViewKeyboardDismissBehavior.onDrag,
-                            itemBuilder: (BuildContext context, int index) {
-                              return NotificationItem(
-                                key: GlobalKey(),
-                                title: 'adhf adshf adfh padshfiap dosihfapdshf',
-                              );
-                            },
-                          ),
-                        )
-                      : Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'No notifications found!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: KColors.primaryLight,
+                  Expanded(
+                    child: KRefresher(
+                      onRefresh: () async {},
+                      child: (app?.notifications != null &&
+                              app!.notifications!.isNotEmpty)
+                          ? ListView.builder(
+                              itemCount: 0,
+                              primary: false,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              keyboardDismissBehavior:
+                                  ScrollViewKeyboardDismissBehavior.onDrag,
+                              itemBuilder: (BuildContext context, int index) {
+                                return NotificationItem(
+                                  key: GlobalKey(),
+                                  title:
+                                      'adhf adshf adfh padshfiap dosihfapdshf',
+                                );
+                              },
+                            )
+                          : Stack(
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Text(
+                                      'No notifications found!',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: KColors.primaryLight,
+                                      ),
+                                    ),
+                                    SizedBox(height: 50.h),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(height: 50.h),
-                            ],
-                          ),
-                        ),
+                                ListView(
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ),
                 ],
               );
             },
