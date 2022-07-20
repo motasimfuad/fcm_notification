@@ -16,8 +16,8 @@ import '../../../../core/widgets/k_fab.dart';
 import '../../../../core/widgets/k_textfield.dart';
 
 class AddAppPage extends StatefulWidget {
-  final String? id;
-  const AddAppPage({
+  String? id;
+  AddAppPage({
     Key? key,
     this.id,
   }) : super(key: key);
@@ -46,10 +46,21 @@ class _AddAppPageState extends State<AddAppPage> {
   }
 
   @override
+  void dispose() {
+    // widget.id = null;
+    // _nameController.dispose();
+    // _serverKeyController.dispose();
+    // _iconName = null;
+    // _stateApp = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KColors.background,
-      appBar: const KAppbar(title: 'New Application'),
+      appBar: KAppbar(
+          title: (widget.id != null) ? "Edit Application" : 'New Application'),
       body: Container(
         padding: EdgeInsets.all(20.w),
         child: SingleChildScrollView(
@@ -77,12 +88,14 @@ class _AddAppPageState extends State<AddAppPage> {
               }
             },
             builder: (context, state) {
-              if (state is AppLoaded) {
-                _stateApp = state.app;
+              if (widget.id != null) {
+                if (state is AppLoaded) {
+                  _stateApp = state.app;
 
-                _nameController.text = _stateApp?.name ?? '';
-                _serverKeyController.text = _stateApp?.serverKey ?? '';
-                _iconName = _stateApp?.iconName;
+                  _nameController.text = _stateApp?.name ?? '';
+                  _serverKeyController.text = _stateApp?.serverKey ?? '';
+                  _iconName = _stateApp?.iconName;
+                }
               }
               if (state is AppIconAddedState) {
                 _iconName = state.iconName;
@@ -152,7 +165,7 @@ class _AddAppPageState extends State<AddAppPage> {
         ),
       ),
       floatingActionButton: KFab(
-        label: 'SAVE',
+        label: (widget.id != null) ? 'UPDATE' : 'SAVE',
         icon: Icons.data_saver_on_rounded,
         onPressed: () async {
           var isValid = _formKey.currentState!.validate();

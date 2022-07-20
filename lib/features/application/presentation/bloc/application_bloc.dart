@@ -32,6 +32,7 @@ class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
     required this.updateApp,
   }) : super(ApplicationInitial()) {
     on<ApplicationEvent>((event, emit) async {
+      print("state: ${state.toString()}");
       // Get all apps
       if (event is GetAllAppsEvent) {
         emit(AppListLoading());
