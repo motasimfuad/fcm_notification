@@ -12,6 +12,7 @@ import 'package:hive/hive.dart';
 import 'features/application/data/datasources/app_local_datasource.dart';
 import 'features/application/data/models/app_model.dart';
 import 'features/application/domain/usecases/get_all_apps_usecase.dart';
+import 'features/notification/data/models/notification_model.dart';
 
 final getIt = GetIt.instance;
 
@@ -52,9 +53,14 @@ Future<void> init() async {
   //! external
 
   // hive
+  // app box
   Hive.registerAdapter(AppModelAdapter());
-  await Hive.openBox<AppModel>(Strings.appBox);
-
-  var appBox = Hive.box<AppModel>(Strings.appBox);
+  var appBox = await Hive.openBox<AppModel>(Strings.appBox);
   getIt.registerLazySingleton(() => appBox);
+
+  // notification box
+  Hive.registerAdapter(NotificationModelAdapter());
+  var notificationBox =
+      await Hive.openBox<NotificationModel>(Strings.notificationBox);
+  getIt.registerLazySingleton(() => notificationBox);
 }

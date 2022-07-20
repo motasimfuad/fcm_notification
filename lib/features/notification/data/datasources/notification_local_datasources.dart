@@ -1,41 +1,49 @@
-import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
+import 'package:hive/hive.dart';
+
+import 'package:fcm_notification/features/notification/data/models/notification_model.dart';
 
 abstract class NotificationLocalDatasources {
-  Future<List<NotificationEntity>> getAppsNotifications(
-      {required String appId});
-  Future<NotificationEntity> getNotification({required String notificationId});
-  Future<void> createNotification({required NotificationEntity notification});
-  Future<void> updateNotification({required NotificationEntity notification});
+  Future<List<NotificationModel>> getAppsNotifications({required String appId});
+  Future<NotificationModel> getNotification({required String notificationId});
+  Future<void> createNotification({required NotificationModel notification});
+  Future<void> updateNotification({required NotificationModel notification});
   Future<void> deleteNotification({required String notificationId});
 }
 
 class NotificationLocalDatasourcesImpl implements NotificationLocalDatasources {
+  Box<NotificationModel> notificationBox;
+  NotificationLocalDatasourcesImpl({
+    required this.notificationBox,
+  });
+
   @override
   Future<void> createNotification(
-      {required NotificationEntity notification}) async {}
-
-  @override
-  Future<void> deleteNotification({required String notificationId}) {
-    // TODO: implement deleteNotification
-    throw UnimplementedError();
+      {required NotificationModel notification}) async {
+    return await notificationBox.put(notification.id, notification);
   }
 
   @override
-  Future<List<NotificationEntity>> getAppsNotifications(
-      {required String appId}) {
-    // TODO: implement getAppsNotifications
-    throw UnimplementedError();
+  Future<void> deleteNotification({required String notificationId}) async {
+    return await notificationBox.delete(notificationId);
   }
 
   @override
-  Future<NotificationEntity> getNotification({required String notificationId}) {
-    // TODO: implement getNotification
-    throw UnimplementedError();
+  Future<List<NotificationModel>> getAppsNotifications(
+      {required String appId}) async {
+    return notificationBox.values
+        .where((element) => element.appId == appId)
+        .toList();
   }
 
   @override
-  Future<void> updateNotification({required NotificationEntity notification}) {
-    // TODO: implement updateNotification
-    throw UnimplementedError();
+  Future<NotificationModel> getNotification(
+      {required String notificationId}) async {
+    return await Future.value(notificationBox.get(notificationId));
+  }
+
+  @override
+  Future<void> updateNotification(
+      {required NotificationModel notification}) async {
+    return await notificationBox.put(notification.id, notification);
   }
 }
