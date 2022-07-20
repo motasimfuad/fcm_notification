@@ -7,6 +7,9 @@ import 'package:fcm_notification/features/notification/domain/usecases/get_app_n
 import 'package:fcm_notification/features/notification/domain/usecases/get_notification_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/update_notification_usecase.dart';
 
+import '../../../../core/usecases/usecase.dart';
+import '../../domain/entities/notification_entity.dart';
+
 part 'notification_event.dart';
 part 'notification_state.dart';
 
@@ -25,7 +28,17 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     required this.deleteNotification,
   }) : super(NotificationInitial()) {
     on<NotificationEvent>((event, emit) async {
-      // TODO: implement event handler
+      // get apps notifications
+      if (event is GetAppsNotificationEvent) {
+        emit(NotificationListLoading());
+        final notifications = await getAppsNotifications(Params(
+          id: event.appId,
+        ));
+        notifications.fold(
+          (l) => emit(NotificationListLoadingFailed(message: l.toString())),
+          (r) => emit(NotificationListLoaded(notifications: r)),
+        );
+      }
     });
   }
 }

@@ -6,3 +6,10 @@ abstract class NotificationEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class GetAppsNotificationEvent extends NotificationEvent {
+  final String appId;
+  const GetAppsNotificationEvent({required this.appId});
+  @override
+  List<Object> get props => [appId];
+}
