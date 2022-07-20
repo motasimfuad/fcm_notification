@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:fcm_notification/core/errors/exceptions.dart';
 
 import 'package:fcm_notification/core/errors/failures.dart';
 import 'package:fcm_notification/features/application/data/datasources/app_local_datasource.dart';
@@ -18,7 +19,7 @@ class AppRepositoryImpl implements AppRepository {
     try {
       final app = await datasource.createApp(app: appModel);
       return Right(app);
-    } on Exception {
+    } on LocalException {
       return Left(LocalFailure());
     }
   }
@@ -28,7 +29,7 @@ class AppRepositoryImpl implements AppRepository {
     try {
       final app = await datasource.deleteApp(id: id);
       return Right(app);
-    } on Exception {
+    } on LocalException {
       return Left(LocalFailure());
     }
   }
@@ -38,7 +39,7 @@ class AppRepositoryImpl implements AppRepository {
     try {
       final apps = await datasource.getAllApps();
       return Right(apps.map((e) => e.toEntity()).toList());
-    } on Exception {
+    } on LocalException {
       return Left(LocalFailure());
     }
   }
@@ -48,7 +49,7 @@ class AppRepositoryImpl implements AppRepository {
     try {
       final app = await datasource.getApp(id: id);
       return Right(app.toEntity());
-    } on Exception {
+    } on LocalException {
       return Left(LocalFailure());
     }
   }
@@ -59,7 +60,7 @@ class AppRepositoryImpl implements AppRepository {
     try {
       final app = await datasource.updateApp(app: appModel);
       return Right(app);
-    } on Exception {
+    } on LocalException {
       return Left(LocalFailure());
     }
   }
