@@ -1,17 +1,22 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:fcm_notification/core/constants/enums.dart';
 import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/core/widgets/k_radio_tile.dart';
 import 'package:fcm_notification/core/widgets/k_snack_bar.dart';
 import 'package:fcm_notification/core/widgets/k_textfield.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/widgets/k_fab.dart';
 
 class CreateNotificationPage extends StatefulWidget {
-  const CreateNotificationPage({Key? key}) : super(key: key);
+  final String appId;
+  const CreateNotificationPage({
+    Key? key,
+    required this.appId,
+  }) : super(key: key);
 
   @override
   State<CreateNotificationPage> createState() => _CreateNotificationPageState();

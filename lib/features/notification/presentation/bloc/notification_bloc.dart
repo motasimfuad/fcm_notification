@@ -39,6 +39,18 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
           (r) => emit(NotificationListLoaded(notifications: r)),
         );
       }
+
+      // create notification
+      if (event is CreateNotificationEvent) {
+        emit(NotificationLoading());
+        final notification = await createNotification(Params(
+          notification: event.notification,
+        ));
+        notification.fold(
+          (l) => emit(NotificationCreatingFailed(message: l.toString())),
+          (r) => emit(NotificationCreated()),
+        );
+      }
     });
   }
 }

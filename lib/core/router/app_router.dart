@@ -35,10 +35,9 @@ final router = GoRouter(
       name: AppRouter.addApplicationPage,
       path: '/${AppRouter.addApplicationPage}',
       pageBuilder: (context, state) {
-        print("add page state.params: ${state.params}");
         return MaterialPage(
           key: state.pageKey,
-          child: AddAppPage(id: null),
+          child: const AddAppPage(id: null),
         );
       },
     ),
@@ -48,8 +47,6 @@ final router = GoRouter(
       name: AppRouter.applicationEditPage,
       path: '/${AppRouter.applicationEditPage}/:id',
       pageBuilder: (context, state) {
-        print("Edit page state.params: ${state.params}");
-
         final id = state.params['id'];
         return MaterialPage(
           key: state.pageKey,
@@ -93,9 +90,11 @@ final router = GoRouter(
       name: AppRouter.createNotificationPage,
       path: '/${AppRouter.createNotificationPage}',
       pageBuilder: (context, state) {
+        final appId = state.params['appId'];
+
         return MaterialPage(
           key: state.pageKey,
-          child: const CreateNotificationPage(),
+          child: CreateNotificationPage(appId: appId.toString()),
         );
       },
     ),

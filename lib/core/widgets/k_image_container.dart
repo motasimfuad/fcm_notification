@@ -118,7 +118,6 @@ class KImageContainer extends StatelessWidget {
 
   // file image builder
   Image buildFileImage() {
-    print('imageUrl: $imageUrl');
     return Image.file(
       File(imageUrl ?? ''),
       fit: imageFit ?? BoxFit.cover,

@@ -49,7 +49,10 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                   label: 'NOTIFICATION',
                   icon: Icons.notification_add_rounded,
                   onPressed: () {
-                    router.pushNamed(AppRouter.createNotificationPage);
+                    router.pushNamed(
+                      AppRouter.createNotificationPage,
+                      params: {'appId': app!.id},
+                    );
                   },
                 )
               : null,
@@ -98,7 +101,9 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                               child: NewNotificationIcon(
                                 onTap: () {
                                   router.pushNamed(
-                                      AppRouter.createNotificationPage);
+                                    AppRouter.createNotificationPage,
+                                    params: {'appId': app!.id},
+                                  );
                                 },
                               ),
                             )

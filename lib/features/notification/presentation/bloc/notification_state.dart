@@ -24,3 +24,19 @@ class NotificationListLoadingFailed extends NotificationState {
   @override
   List<Object> get props => [message];
 }
+
+class NotificationLoading extends NotificationState {}
+
+class NotificationCreated extends NotificationState {
+  // final NotificationEntity notification;
+  // const NotificationCreated({required this.notification});
+  // @override
+  // List<Object> get props => [notification];
+}
+
+class NotificationCreatingFailed extends NotificationState {
+  final String message;
+  const NotificationCreatingFailed({required this.message});
+  @override
+  List<Object> get props => [message];
+}
