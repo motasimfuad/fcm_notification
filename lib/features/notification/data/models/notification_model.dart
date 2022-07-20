@@ -141,6 +141,23 @@ class NotificationModel extends NotificationEntity {
     );
   }
 
+  NotificationEntity toNotificationEntity() {
+    return NotificationEntity(
+      appId: appId,
+      id: id,
+      name: name,
+      topicName: topicName,
+      deviceId: deviceId,
+      title: title,
+      body: body,
+      imageUrl: imageUrl,
+      dataKey: dataKey,
+      dataValue: dataValue,
+      createdAt: createdAt,
+      lastSentAt: lastSentAt,
+    );
+  }
+
   @override
   String toString() {
     return 'NotificationModel(appId: $appId ,id: $id, name: $name, topicName: $topicName, deviceId: $deviceId, title: $title, body: $body, imageUrl: $imageUrl, key: $dataKey, value: $dataValue, createdAt: $createdAt, lastSentAt: $lastSentAt)';
