@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 import 'package:fcm_notification/features/notification/data/models/notification_model.dart';
 
-abstract class NotificationLocalDatasources {
+abstract class NotificationLocalDatasource {
   Future<List<NotificationModel>> getAppsNotifications({required String appId});
   Future<NotificationModel> getNotification({required String notificationId});
   Future<void> createNotification({required NotificationModel notification});
@@ -10,9 +10,9 @@ abstract class NotificationLocalDatasources {
   Future<void> deleteNotification({required String notificationId});
 }
 
-class NotificationLocalDatasourcesImpl implements NotificationLocalDatasources {
+class NotificationLocalDatasourceImpl implements NotificationLocalDatasource {
   Box<NotificationModel> notificationBox;
-  NotificationLocalDatasourcesImpl({
+  NotificationLocalDatasourceImpl({
     required this.notificationBox,
   });
 

@@ -6,13 +6,22 @@ import 'package:fcm_notification/features/application/domain/usecases/delete_app
 import 'package:fcm_notification/features/application/domain/usecases/get_app_usecase.dart';
 import 'package:fcm_notification/features/application/domain/usecases/update_app_usecase.dart';
 import 'package:fcm_notification/features/application/presentation/bloc/application_bloc.dart';
+import 'package:fcm_notification/features/notification/data/repositories/notification_repositiory_impl.dart';
+import 'package:fcm_notification/features/notification/domain/repositories/notification_repository.dart';
+import 'package:fcm_notification/features/notification/presentation/bloc/notification_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 
 import 'features/application/data/datasources/app_local_datasource.dart';
 import 'features/application/data/models/app_model.dart';
 import 'features/application/domain/usecases/get_all_apps_usecase.dart';
+import 'features/notification/data/datasources/notification_local_datasource.dart';
 import 'features/notification/data/models/notification_model.dart';
+import 'features/notification/domain/usecases/create_notification_usecase.dart';
+import 'features/notification/domain/usecases/delete_notification_usecase.dart';
+import 'features/notification/domain/usecases/get_app_notifications_usecase.dart';
+import 'features/notification/domain/usecases/get_notification_usecase.dart';
+import 'features/notification/domain/usecases/update_notification_usecase.dart';
 
 final getIt = GetIt.instance;
 
@@ -29,6 +38,16 @@ Future<void> init() async {
     ),
   );
 
+  getIt.registerFactory(
+    () => NotificationBloc(
+      createNotification: getIt(),
+      updateNotification: getIt(),
+      getAppsNotifications: getIt(),
+      getNotification: getIt(),
+      deleteNotification: getIt(),
+    ),
+  );
+
   // usecases
   getIt.registerLazySingleton(() => GetAllAppsUsecase(getIt()));
   getIt.registerLazySingleton(() => GetAppUsecase(getIt()));
@@ -36,9 +55,18 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => DeleteAppUsecase(getIt()));
   getIt.registerLazySingleton(() => UpdateAppUsecase(getIt()));
 
+  getIt.registerLazySingleton(() => GetAppsNotificationsUsecase(getIt()));
+  getIt.registerLazySingleton(() => GetNotificationUsecase(getIt()));
+  getIt.registerLazySingleton(() => CreateNotificationUsecase(getIt()));
+  getIt.registerLazySingleton(() => UpdateNotificationUsecase(getIt()));
+  getIt.registerLazySingleton(() => DeleteNotificationUsecase(getIt()));
+
   // repositories
   getIt.registerLazySingleton<AppRepository>(
     () => AppRepositoryImpl(datasource: getIt()),
+  );
+  getIt.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(notificationData: getIt()),
   );
 
   //! core
@@ -49,9 +77,13 @@ Future<void> init() async {
       appBox: getIt(),
     ),
   );
+  getIt.registerLazySingleton<NotificationLocalDatasource>(
+    () => NotificationLocalDatasourceImpl(
+      notificationBox: getIt(),
+    ),
+  );
 
   //! external
-
   // hive
   // app box
   Hive.registerAdapter(AppModelAdapter());

@@ -2,13 +2,13 @@ import 'package:dartz/dartz.dart';
 import 'package:fcm_notification/core/errors/exceptions.dart';
 
 import 'package:fcm_notification/core/errors/failures.dart';
-import 'package:fcm_notification/features/notification/data/datasources/notification_local_datasources.dart';
+import 'package:fcm_notification/features/notification/data/datasources/notification_local_datasource.dart';
 import 'package:fcm_notification/features/notification/data/models/notification_model.dart';
 import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
 import 'package:fcm_notification/features/notification/domain/repositories/notification_repository.dart';
 
 class NotificationRepositoryImpl implements NotificationRepository {
-  final NotificationLocalDatasources notificationData;
+  final NotificationLocalDatasource notificationData;
   NotificationRepositoryImpl({
     required this.notificationData,
   });
