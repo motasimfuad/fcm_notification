@@ -1,3 +1,5 @@
+import 'package:fcm_notification/core/router/app_router.dart';
+import 'package:fcm_notification/features/notification/presentation/widgets/notification_fab_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,9 +8,12 @@ import 'package:fcm_notification/core/constants/colors.dart';
 import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/core/widgets/k_image_container.dart';
+import 'package:sweetsheet/sweetsheet.dart';
 
+import '../../../../core/widgets/k_bottom_sheet.dart';
 import '../../domain/entities/notification_entity.dart';
 import '../bloc/notification_bloc.dart';
+import '../widgets/notification_detail_item.dart';
 
 class NotificationDetailPage extends StatefulWidget {
   final String id;
@@ -35,43 +40,90 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
     return Scaffold(
       backgroundColor: KColors.background,
       appBar: const KAppbar(title: 'Notification Detail'),
-      body: BlocConsumer<NotificationBloc, NotificationState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          if (state is NotificationLoaded) {
-            notification = state.notification;
-          }
+      body: Padding(
+        padding: EdgeInsets.all(10.w),
+        child: NotificationFabMenu(
+          onTapDelete: () {
+            notificationDeleteMethod(context);
+          },
+          onTapDuplicate: () {
+            notificationDuplicateMethod(context);
+          },
+          onTapEdit: () {},
+          onTapSend: () {},
+          child: BlocConsumer<NotificationBloc, NotificationState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              if (state is NotificationLoaded) {
+                notification = state.notification;
+              }
 
-          return SingleChildScrollView(
-            padding: EdgeInsets.all(20.w),
-            child: Column(
-              children: [
-                NotificationDetailItem(
-                  label: 'Notification Name',
-                  value: notification?.name,
+              return SingleChildScrollView(
+                padding: EdgeInsets.all(10.w),
+                child: Column(
+                  children: [
+                    NotificationDetailItem(
+                      label: 'Notification Name',
+                      value: notification?.name,
+                    ),
+                    NotificationDetailItem(
+                      label: 'Topic Name',
+                      value: notification?.topicName,
+                    ),
+                    NotificationDetailItem(
+                      label: 'Device ID',
+                      value: notification?.deviceId,
+                    ),
+                    (notification?.topicName != null &&
+                            notification!.topicName!.isNotEmpty)
+                        ? buildNotificationFields()
+                        : const SizedBox(),
+                    // SizedBox(height: 20.w),
+                    (notification?.deviceId != null &&
+                            notification!.deviceId!.isNotEmpty)
+                        ? buildDataMessageFields()
+                        : const SizedBox(),
+                  ],
                 ),
-                NotificationDetailItem(
-                  label: 'Topic Name',
-                  value: notification?.topicName,
-                ),
-                NotificationDetailItem(
-                  label: 'Device ID',
-                  value: notification?.deviceId,
-                ),
-                (notification?.topicName != null &&
-                        notification!.topicName!.isNotEmpty)
-                    ? buildNotificationFields()
-                    : const SizedBox(),
-                // SizedBox(height: 20.w),
-                (notification?.deviceId != null &&
-                        notification!.deviceId!.isNotEmpty)
-                    ? buildDataMessageFields()
-                    : const SizedBox(),
-              ],
-            ),
-          );
-        },
+              );
+            },
+          ),
+        ),
       ),
+    );
+  }
+
+  void notificationDuplicateMethod(BuildContext context) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    kBottomSheet(
+      context: context,
+      title: 'Duplicate?',
+      description: 'Duplicate this notification?',
+      icon: Icons.copy_all_rounded,
+      color: SweetSheetColor.SUCCESS,
+      positiveAction: () {
+        context
+            .read<NotificationBloc>()
+            .add(DuplicateNotificationEvent(notification: notification!));
+        Navigator.pop(context);
+        router.pop();
+      },
+    );
+  }
+
+  void notificationDeleteMethod(BuildContext context) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    kBottomSheet(
+      context: context,
+      description: 'Do you really want to delete this notification?',
+      icon: Icons.delete_sweep_rounded,
+      positiveAction: () {
+        context
+            .read<NotificationBloc>()
+            .add(DeleteNotificationEvent(id: notification!.id));
+        Navigator.pop(context);
+        router.pop();
+      },
     );
   }
 
@@ -184,78 +236,5 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
         ),
       ),
     );
-  }
-}
-
-class NotificationDetailItem extends StatelessWidget {
-  final String? label;
-  final String? value;
-  final bool? hasBottomMargin;
-  final Color? bgColor;
-  final bool? showItem;
-  const NotificationDetailItem({
-    Key? key,
-    this.label,
-    this.value,
-    this.hasBottomMargin = true,
-    this.bgColor,
-    this.showItem = true,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return (value != null && value!.isNotEmpty)
-        ? Column(
-            children: [
-              label != null
-                  ? Padding(
-                      padding: EdgeInsets.only(left: 10.w, bottom: 6.w),
-                      child: Row(
-                        children: [
-                          Text(
-                            label ?? '',
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              color: KColors.primary.shade300,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : const SizedBox(),
-              Padding(
-                padding: EdgeInsets.only(
-                  bottom: (hasBottomMargin == false) ? 0 : 20.w,
-                ),
-                child: KCard(
-                  color: bgColor ?? KColors.primary,
-                  radius: 15.r,
-                  yPadding: 0.w,
-                  xPadding: 0.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 15.w,
-                      vertical: 13.w,
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            value ?? 'Not Available',
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              color: KColors.primary.shade300,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )
-        : const SizedBox();
   }
 }
