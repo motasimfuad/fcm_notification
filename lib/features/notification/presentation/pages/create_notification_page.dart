@@ -1,4 +1,6 @@
+import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:fcm_notification/core/constants/enums.dart';
@@ -7,9 +9,12 @@ import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/core/widgets/k_radio_tile.dart';
 import 'package:fcm_notification/core/widgets/k_snack_bar.dart';
 import 'package:fcm_notification/core/widgets/k_textfield.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../core/constants/colors.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/widgets/k_fab.dart';
+import '../bloc/notification_bloc.dart';
 
 class CreateNotificationPage extends StatefulWidget {
   final String appId;
@@ -30,6 +35,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
   final TextEditingController _deviceIdController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _bodyController = TextEditingController();
+  final TextEditingController _imageLinkController = TextEditingController();
   final TextEditingController _dataKeyController = TextEditingController();
   final TextEditingController _dataValueController = TextEditingController();
 
@@ -80,10 +86,165 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
 
   @override
   Widget build(BuildContext context) {
+    //!
+
+    _nameController.text = 'only test --- DELETE ME';
+    _topicNameController.text = 'Test Topic';
+    _deviceIdController.text = 'Test Device Id';
+    _titleController.text = 'Test Title';
+    _bodyController.text = 'Test Body';
+    _dataKeyController.text = 'Test Data Key';
+    _dataValueController.text = 'Test Data Value';
+    _imageLinkController.text =
+        'https://blog.tryshiftcdn.com/uploads/2021/01/notifications@2x.jpg';
+
+    //!
     return Scaffold(
       backgroundColor: KColors.background,
       appBar: const KAppbar(
         title: 'Create Notification',
+      ),
+      body: BlocConsumer<NotificationBloc, NotificationState>(
+        listener: (context, state) {
+          if (state is NotificationCreatedState) {
+            kSnackBar(
+              context: context,
+              type: AlertType.success,
+              message: 'Notification created successfully!',
+            );
+
+            context
+                .read<NotificationBloc>()
+                .add(GetAppNotificationsEvent(appId: widget.appId));
+            router.pop();
+          }
+        },
+        builder: (context, state) {
+          return SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: EdgeInsets.only(
+              left: 20.w,
+              right: 20.w,
+              top: 10.h,
+              bottom: 20.h,
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  KTextField(
+                    hintText: 'Notification Name *',
+                    controller: _nameController,
+                    // autofocus: true, //! make true
+                    validator: (value) {
+                      if (value!.trim().isEmpty) {
+                        return 'Notification name is required!';
+                      }
+                      return null;
+                    },
+                  ),
+                  KCard(
+                    color: KColors.primary,
+                    xPadding: 15.w,
+                    // yPadding: 20.h,
+                    hasBorder: receiverTypeIsValid == true ? false : true,
+                    borderColor: Colors.red,
+                    borderWidth: 1.w,
+                    child: Column(
+                      children: [
+                        KRadioTile(
+                          value: NotificationReceiverType.all,
+                          groupValue: _notificationReceiverType,
+                          title: 'All Users',
+                          subtitle: 'Topic name required',
+                          icon: Icons.alt_route_outlined,
+                          onChanged: (value) {
+                            setState(() {
+                              _notificationReceiverType =
+                                  value as NotificationReceiverType;
+                            });
+                          },
+                        ),
+                        KRadioTile(
+                          value: NotificationReceiverType.single,
+                          groupValue: _notificationReceiverType,
+                          title: 'Single User',
+                          subtitle: 'Device id required',
+                          icon: Icons.turn_slight_right_sharp,
+                          onChanged: (value) {
+                            setState(() {
+                              _notificationReceiverType =
+                                  value as NotificationReceiverType;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 15.h),
+                        _notificationReceiverType ==
+                                NotificationReceiverType.all
+                            ? KTextField(
+                                hintText: 'Topic Name *',
+                                controller: _topicNameController,
+                                bottomPadding: 5.h,
+                                bgColor: KColors.background,
+                              )
+                            : KTextField(
+                                hintText: 'Device ID *',
+                                controller: _deviceIdController,
+                                bgColor: KColors.background,
+                                bottomPadding: 5.h,
+                              )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  KCard(
+                    color: KColors.primary,
+                    xPadding: 15.w,
+                    hasBorder:
+                        notificationGroupTypeIsValid == true ? false : true,
+                    borderColor: Colors.red,
+                    borderWidth: 1.w,
+                    child: Column(
+                      children: [
+                        KRadioTile(
+                          value: NotificationType.notification,
+                          groupValue: _notificationGroupType,
+                          title: 'Notification',
+                          subtitle: 'Send a notification',
+                          icon: Icons.notification_important_rounded,
+                          onChanged: (value) {
+                            setState(() {
+                              _notificationGroupType =
+                                  value as NotificationType;
+                            });
+                          },
+                        ),
+                        KRadioTile(
+                          value: NotificationType.dataMessage,
+                          groupValue: _notificationGroupType,
+                          title: 'Data Message',
+                          subtitle: 'Send data message',
+                          icon: Icons.message_rounded,
+                          onChanged: (value) {
+                            setState(() {
+                              _notificationGroupType =
+                                  value as NotificationType;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 15.h),
+                        _notificationGroupType == NotificationType.notification
+                            ? buildNotificationFields()
+                            : buildDataMessageFields(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 70.h),
+                ],
+              ),
+            ),
+          );
+        },
       ),
       floatingActionButton: KFab(
         label: 'CREATE',
@@ -95,6 +256,22 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
           if (isValid == true &&
               receiverTypeIsValid == true &&
               notificationGroupTypeIsValid == true) {
+            NotificationEntity notificationEntity = NotificationEntity(
+              appId: widget.appId,
+              id: const Uuid().v1(),
+              name: _nameController.text.trim(),
+              topicName: _topicNameController.text.trim(),
+              deviceId: _deviceIdController.text.trim(),
+              title: _titleController.text.trim(),
+              body: _bodyController.text.trim(),
+              dataKey: _dataKeyController.text.trim(),
+              dataValue: _dataValueController.text.trim(),
+              imageUrl: _imageLinkController.text.trim(),
+              createdAt: DateTime.now(),
+            );
+            context.read<NotificationBloc>().add(
+                  CreateNotificationEvent(notification: notificationEntity),
+                );
           } else {
             kSnackBar(
               context: context,
@@ -103,121 +280,6 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
             );
           }
         },
-      ),
-      body: SingleChildScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        padding: EdgeInsets.all(20.w),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              KTextField(
-                hintText: 'Notification Name *',
-                controller: _nameController,
-                // autofocus: true,
-                validator: (value) {
-                  if (value!.trim().isEmpty) {
-                    return 'Notification name is required!';
-                  }
-                  return null;
-                },
-              ),
-              KCard(
-                color: KColors.primary,
-                xPadding: 15.w,
-                // yPadding: 20.h,
-                hasBorder: receiverTypeIsValid == true ? false : true,
-                borderColor: Colors.red,
-                borderWidth: 1.w,
-                child: Column(
-                  children: [
-                    KRadioTile(
-                      value: NotificationReceiverType.all,
-                      groupValue: _notificationReceiverType,
-                      title: 'All Users',
-                      subtitle: 'Topic name required',
-                      icon: Icons.alt_route_outlined,
-                      onChanged: (value) {
-                        setState(() {
-                          _notificationReceiverType =
-                              value as NotificationReceiverType;
-                        });
-                      },
-                    ),
-                    KRadioTile(
-                      value: NotificationReceiverType.single,
-                      groupValue: _notificationReceiverType,
-                      title: 'Single User',
-                      subtitle: 'Device id required',
-                      icon: Icons.turn_slight_right_sharp,
-                      onChanged: (value) {
-                        setState(() {
-                          _notificationReceiverType =
-                              value as NotificationReceiverType;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    _notificationReceiverType == NotificationReceiverType.all
-                        ? KTextField(
-                            hintText: 'Topic Name *',
-                            controller: _topicNameController,
-                            bottomPadding: 5.h,
-                            bgColor: KColors.background,
-                          )
-                        : KTextField(
-                            hintText: 'Device ID *',
-                            controller: _deviceIdController,
-                            bgColor: KColors.background,
-                            bottomPadding: 5.h,
-                          )
-                  ],
-                ),
-              ),
-              SizedBox(height: 20.h),
-              KCard(
-                color: KColors.primary,
-                xPadding: 15.w,
-                hasBorder: notificationGroupTypeIsValid == true ? false : true,
-                borderColor: Colors.red,
-                borderWidth: 1.w,
-                child: Column(
-                  children: [
-                    KRadioTile(
-                      value: NotificationType.notification,
-                      groupValue: _notificationGroupType,
-                      title: 'Notification',
-                      subtitle: 'Send a notification',
-                      icon: Icons.notification_important_rounded,
-                      onChanged: (value) {
-                        setState(() {
-                          _notificationGroupType = value as NotificationType;
-                        });
-                      },
-                    ),
-                    KRadioTile(
-                      value: NotificationType.dataMessage,
-                      groupValue: _notificationGroupType,
-                      title: 'Data Message',
-                      subtitle: 'Send data message',
-                      icon: Icons.message_rounded,
-                      onChanged: (value) {
-                        setState(() {
-                          _notificationGroupType = value as NotificationType;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    _notificationGroupType == NotificationType.notification
-                        ? buildNotificationFields()
-                        : buildDataMessageFields(),
-                  ],
-                ),
-              ),
-              SizedBox(height: 70.h),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -240,7 +302,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
         ),
         KTextField(
           hintText: 'Image link (optional)',
-          controller: _titleController,
+          controller: _imageLinkController,
           bgColor: KColors.background,
           bottomPadding: 10.h,
         ),

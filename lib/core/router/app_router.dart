@@ -88,8 +88,10 @@ final router = GoRouter(
     ),
     GoRoute(
       name: AppRouter.createNotificationPage,
-      path: '/${AppRouter.createNotificationPage}',
+      path: '/:appId/${AppRouter.createNotificationPage}',
       pageBuilder: (context, state) {
+        print(state.path);
+        print(state.params);
         final appId = state.params['appId'];
 
         return MaterialPage(

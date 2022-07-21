@@ -23,6 +23,7 @@ class AppListItem extends StatelessWidget {
   final Function()? onEditTap;
   final Function()? onDeleteTap;
   final int? maxLines;
+  final double? bottomMargin;
   const AppListItem({
     Key? key,
     this.app,
@@ -38,13 +39,14 @@ class AppListItem extends StatelessWidget {
     this.onEditTap,
     this.onDeleteTap,
     this.maxLines,
+    this.bottomMargin,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        bottom: 18.h,
+        bottom: bottomMargin ?? 18.h,
       ),
       child: KCard(
         xPadding: 0.w,

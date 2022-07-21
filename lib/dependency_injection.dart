@@ -11,6 +11,7 @@ import 'package:fcm_notification/features/notification/domain/repositories/notif
 import 'package:fcm_notification/features/notification/presentation/bloc/notification_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:sweetsheet/sweetsheet.dart';
 
 import 'features/application/data/datasources/app_local_datasource.dart';
 import 'features/application/data/models/app_model.dart';
@@ -95,4 +96,7 @@ Future<void> init() async {
   var notificationBox =
       await Hive.openBox<NotificationModel>(Strings.notificationBox);
   getIt.registerLazySingleton(() => notificationBox);
+
+  // SweetSheet - bottom sheet
+  getIt.registerSingleton(SweetSheet());
 }

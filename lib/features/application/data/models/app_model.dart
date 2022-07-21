@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 import 'package:fcm_notification/features/notification/data/models/notification_model.dart';
-import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
 import 'package:hive/hive.dart';
 
 part 'app_model.g.dart';
@@ -20,7 +19,7 @@ class AppModel extends AppEntity {
   @HiveField(3)
   final String? iconName;
   @HiveField(4)
-  final List<NotificationEntity?>? notifications;
+  final List<NotificationModel?>? notifications;
   @HiveField(5)
   final DateTime createdAt;
 
@@ -45,7 +44,7 @@ class AppModel extends AppEntity {
     String? name,
     String? serverKey,
     String? iconName,
-    List<NotificationEntity>? notifications,
+    List<NotificationModel>? notifications,
     DateTime? createdAt,
   }) {
     return AppModel(
@@ -91,7 +90,12 @@ class AppModel extends AppEntity {
       name: entity.name,
       serverKey: entity.serverKey,
       iconName: entity.iconName,
-      notifications: entity.notifications,
+      notifications:
+          (entity.notifications != null && entity.notifications!.isNotEmpty)
+              ? entity.notifications
+                  ?.map((e) => NotificationModel.fromNotificationEntity(e!))
+                  .toList()
+              : null,
       createdAt: entity.createdAt,
     );
   }
@@ -102,7 +106,9 @@ class AppModel extends AppEntity {
       name: name,
       serverKey: serverKey,
       iconName: iconName,
-      notifications: notifications,
+      notifications: (notifications != null && notifications!.isNotEmpty)
+          ? notifications!.map((e) => e!.toNotificationEntity()).toList()
+          : null,
       createdAt: createdAt,
     );
   }

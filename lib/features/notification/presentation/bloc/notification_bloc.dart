@@ -29,7 +29,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   }) : super(NotificationInitial()) {
     on<NotificationEvent>((event, emit) async {
       // get apps notifications
-      if (event is GetAppsNotificationEvent) {
+      if (event is GetAppNotificationsEvent) {
         emit(NotificationListLoading());
         final notifications = await getAppsNotifications(Params(
           id: event.appId,
@@ -48,7 +48,18 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         ));
         notification.fold(
           (l) => emit(NotificationCreatingFailed(message: l.toString())),
-          (r) => emit(NotificationCreated()),
+          (r) => emit(NotificationCreatedState()),
+        );
+      }
+
+      // delete notification
+      if (event is DeleteNotificationEvent) {
+        final deleted = await deleteNotification(Params(
+          id: event.id,
+        ));
+        deleted.fold(
+          (l) => emit(NotificationDeletingFailed(message: l.toString())),
+          (r) => emit(NotificationDeletedState()),
         );
       }
     });

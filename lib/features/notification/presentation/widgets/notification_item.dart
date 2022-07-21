@@ -1,18 +1,23 @@
-import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:fcm_notification/core/router/app_router.dart';
+import 'package:fcm_notification/core/widgets/k_bttom_sheet.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/widgets/k_card.dart';
 import '../../../../core/widgets/k_icon_button.dart';
+import '../../domain/entities/notification_entity.dart';
+import '../bloc/notification_bloc.dart';
+
+// final SweetSheet sweetSheet = SweetSheet();
 
 class NotificationItem extends StatelessWidget {
-  final String title;
-  final String? lastSent;
+  final NotificationEntity notification;
   const NotificationItem({
     Key? key,
-    required this.title,
-    this.lastSent,
+    required this.notification,
   }) : super(key: key);
 
   @override
@@ -44,7 +49,7 @@ class NotificationItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      title,
+                      notification.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -55,7 +60,7 @@ class NotificationItem extends StatelessWidget {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      'Last Sent: ${lastSent ?? 'Never'}',
+                      'Last Sent: ${notification.lastSentAt ?? 'Never'}',
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
@@ -83,7 +88,19 @@ class NotificationItem extends StatelessWidget {
                       KIconButton(
                         icon: Icons.delete_outline_rounded,
                         iconColor: KColors.danger,
-                        onPressed: () {},
+                        onPressed: () {
+                          kBottomSheet(
+                            context: context,
+                            description:
+                                'Do you really want to delete this notification?',
+                            icon: Icons.delete_sweep_rounded,
+                            positiveAction: () {
+                              context.read<NotificationBloc>().add(
+                                  DeleteNotificationEvent(id: notification.id));
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
                       ),
                       SizedBox(width: 10.w),
                       KIconButton(

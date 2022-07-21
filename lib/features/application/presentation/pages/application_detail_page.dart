@@ -12,8 +12,11 @@ import 'package:fcm_notification/features/application/presentation/widgets/app_l
 import '../../../../core/widgets/k_appbar.dart';
 import '../../../../core/widgets/k_fab.dart';
 import '../../../../core/widgets/k_refresher.dart';
+import '../../../../core/widgets/k_snack_bar.dart';
+import '../../../notification/domain/entities/notification_entity.dart';
+import '../../../notification/presentation/bloc/notification_bloc.dart';
 import '../../../notification/presentation/widgets/notification_item.dart';
-import '../widgets/new_notification_icon.dart';
+import '../widgets/empty_notifications_widget.dart';
 
 class ApplicationDetailPage extends StatefulWidget {
   final String? appId;
@@ -28,11 +31,19 @@ class ApplicationDetailPage extends StatefulWidget {
 
 class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
   AppEntity? app;
+  List<NotificationEntity>? notifications = [];
 
   @override
   void initState() {
     context.read<ApplicationBloc>().add(GetAppEvent(widget.appId!));
+    context
+        .read<NotificationBloc>()
+        .add(GetAppNotificationsEvent(appId: widget.appId!));
     super.initState();
+  }
+
+  bool notificationListIsEmpty() {
+    return (notifications == null || notifications!.isEmpty);
   }
 
   @override
@@ -43,19 +54,16 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
         title: '',
         height: 50.h,
       ),
-      floatingActionButton:
-          (app?.notifications == null || app!.notifications!.isEmpty)
-              ? KFab(
-                  label: 'NOTIFICATION',
-                  icon: Icons.notification_add_rounded,
-                  onPressed: () {
-                    router.pushNamed(
-                      AppRouter.createNotificationPage,
-                      params: {'appId': app!.id},
-                    );
-                  },
-                )
-              : null,
+      floatingActionButton: KFab(
+        label: 'NOTIFICATION',
+        icon: Icons.notification_add_rounded,
+        onPressed: () {
+          router.pushNamed(
+            AppRouter.createNotificationPage,
+            params: {'appId': app!.id},
+          );
+        },
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
@@ -74,6 +82,10 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
 
               if (state is AppLoaded) {
                 app = state.app;
+                context.read<ApplicationBloc>().add(GetAllAppsEvent());
+              }
+              if (state is AppUpdatedState) {
+                context.read<ApplicationBloc>().add(GetAppEvent(widget.appId!));
               }
 
               return Column(
@@ -81,7 +93,7 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                   Stack(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(bottom: 10.h),
+                        padding: EdgeInsets.only(bottom: 0.h),
                         child: AppListItem(
                           app: app,
                           bgColor: KColors.secondary,
@@ -91,28 +103,29 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                           yPadding: 12.w,
                           titleSize: 20.sp,
                           maxLines: 1,
+                          bottomMargin: 0,
                         ),
                       ),
-                      (app?.notifications != null &&
-                              app!.notifications!.isNotEmpty)
-                          ? Positioned(
-                              right: 15.w,
-                              bottom: 5.w,
-                              child: NewNotificationIcon(
-                                onTap: () {
-                                  router.pushNamed(
-                                    AppRouter.createNotificationPage,
-                                    params: {'appId': app!.id},
-                                  );
-                                },
-                              ),
-                            )
-                          : const SizedBox(),
+                      // notificationListIsEmpty()
+                      //     ? const SizedBox()
+                      //     : Positioned(
+                      //         right: 15.w,
+                      //         bottom: 5.w,
+                      //         child: NewNotificationIcon(
+                      //           onTap: () {
+                      //             router.pushNamed(
+                      //               AppRouter.createNotificationPage,
+                      //               params: {'appId': app!.id},
+                      //             );
+                      //           },
+                      //         ),
+                      //       ),
                     ],
                   ),
-                  (app?.notifications != null && app!.notifications!.isNotEmpty)
-                      ? Padding(
-                          padding: EdgeInsets.only(bottom: 15.h),
+                  notificationListIsEmpty()
+                      ? const SizedBox()
+                      : Padding(
+                          padding: EdgeInsets.only(bottom: 15.h, top: 20.h),
                           child: Row(
                             children: [
                               Text(
@@ -126,53 +139,73 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                               ),
                             ],
                           ),
-                        )
-                      : const SizedBox(),
-                  Expanded(
-                    child: KRefresher(
-                      onRefresh: () async {},
-                      child: (app?.notifications != null &&
-                              app!.notifications!.isNotEmpty)
-                          ? ListView.builder(
-                              itemCount: 0,
-                              primary: false,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              keyboardDismissBehavior:
-                                  ScrollViewKeyboardDismissBehavior.onDrag,
-                              itemBuilder: (BuildContext context, int index) {
-                                return NotificationItem(
-                                  key: GlobalKey(),
-                                  title:
-                                      'adhf adshf adfh padshfiap dosihfapdshf',
+                        ),
+                  BlocConsumer<NotificationBloc, NotificationState>(
+                    listener: (context, state) {
+                      if (state is NotificationListLoaded) {
+                        notifications = state.notifications;
+                        notifications?.sort(
+                            (a, b) => -a.createdAt.compareTo(b.createdAt));
+
+                        // update the app entity
+                        if (app != null) {
+                          AppEntity updateAppEntity = AppEntity(
+                            id: app!.id,
+                            name: app!.name,
+                            serverKey: app!.serverKey,
+                            iconName: app!.iconName,
+                            createdAt: app!.createdAt,
+                            notifications: notifications,
+                          );
+                          context
+                              .read<ApplicationBloc>()
+                              .add(UpdateAppEvent(updateAppEntity));
+                        }
+                      }
+                      if (state is NotificationDeletedState) {
+                        kSnackBar(
+                          context: context,
+                          type: AlertType.success,
+                          message: 'Notification deleted successfully!',
+                        );
+                        context.read<NotificationBloc>().add(
+                            GetAppNotificationsEvent(appId: widget.appId!));
+                      }
+                    },
+                    builder: (context, state) {
+                      return Expanded(
+                        child: KRefresher(
+                          onRefresh: () async {
+                            context.read<NotificationBloc>().add(
+                                  GetAppNotificationsEvent(
+                                    appId: app!.id,
+                                  ),
                                 );
-                              },
-                            )
-                          : Stack(
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      'No notifications found!',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: KColors.primaryLight,
-                                      ),
-                                    ),
-                                    SizedBox(height: 50.h),
-                                  ],
-                                ),
-                                ListView(
+                          },
+                          child: notificationListIsEmpty()
+                              ? const EmptyNotificationsWidget()
+                              : ListView.builder(
+                                  itemCount: notifications!.length,
+                                  primary: false,
+                                  padding: EdgeInsets.only(bottom: 70.h),
                                   physics:
                                       const AlwaysScrollableScrollPhysics(),
+                                  keyboardDismissBehavior:
+                                      ScrollViewKeyboardDismissBehavior.onDrag,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    final singleNotification =
+                                        notifications![index];
+
+                                    return NotificationItem(
+                                      key: GlobalKey(),
+                                      notification: singleNotification,
+                                    );
+                                  },
                                 ),
-                              ],
-                            ),
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               );
