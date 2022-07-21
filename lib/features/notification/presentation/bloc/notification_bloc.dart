@@ -1,12 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:fcm_notification/features/notification/domain/usecases/create_notification_usecase.dart';
+import 'package:fcm_notification/features/notification/domain/usecases/delete_app_notifications_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/delete_notification_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/get_app_notifications_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/get_notification_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/update_notification_usecase.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/entities/notification_entity.dart';
@@ -17,9 +18,10 @@ part 'notification_state.dart';
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final CreateNotificationUsecase createNotification;
   final UpdateNotificationUsecase updateNotification;
-  final GetAppsNotificationsUsecase getAppsNotifications;
+  final GetAppNotificationsUsecase getAppsNotifications;
   final GetNotificationUsecase getNotification;
   final DeleteNotificationUsecase deleteNotification;
+  final DeleteAppNotificationsUsecase deleteAppNotifications;
 
   NotificationBloc({
     required this.createNotification,
@@ -27,6 +29,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     required this.getAppsNotifications,
     required this.getNotification,
     required this.deleteNotification,
+    required this.deleteAppNotifications,
   }) : super(NotificationInitial()) {
     on<NotificationEvent>((event, emit) async {
       // get apps notifications
@@ -38,6 +41,17 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         notifications.fold(
           (l) => emit(NotificationListLoadingFailed(message: l.toString())),
           (r) => emit(NotificationListLoaded(notifications: r)),
+        );
+      }
+
+      // delete app notifications
+      if (event is DeleteAppNotificationsEvent) {
+        final deleted = await deleteAppNotifications(Params(
+          id: event.appId,
+        ));
+        deleted.fold(
+          (l) => emit(NotificationDeletingFailed(message: l.toString())),
+          (r) => emit(NotificationDeletedState()),
         );
       }
 

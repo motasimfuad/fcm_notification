@@ -3,14 +3,14 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/notification_entity.dart';
 import '../repositories/notification_repository.dart';
 
-class GetAppsNotificationsUsecase
+class GetAppNotificationsUsecase
     extends Usecase<List<NotificationEntity>, Params> {
   final NotificationRepository _notificationRepository;
-  GetAppsNotificationsUsecase(this._notificationRepository);
+  GetAppNotificationsUsecase(this._notificationRepository);
 
   @override
   Future<Either<Failure, List<NotificationEntity>>> call(Params params) async {
-    return await _notificationRepository.getAppsNotifications(
+    return await _notificationRepository.getAppNotifications(
       appId: params.id!,
     );
   }

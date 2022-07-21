@@ -38,14 +38,25 @@ class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   @override
-  Future<Either<Failure, List<NotificationEntity>>> getAppsNotifications(
+  Future<Either<Failure, List<NotificationEntity>>> getAppNotifications(
       {required String appId}) async {
     try {
       var notificationsModel =
-          await notificationData.getAppsNotifications(appId: appId);
+          await notificationData.getAppNotifications(appId: appId);
       var notifications =
           notificationsModel.map((e) => e.toNotificationEntity()).toList();
       return Right(notifications);
+    } on LocalException {
+      return Left(LocalFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteAppNotifications(
+      {required String appId}) async {
+    try {
+      var deleted = await notificationData.deleteAppNotifications(appId: appId);
+      return Right(deleted);
     } on LocalException {
       return Left(LocalFailure());
     }
