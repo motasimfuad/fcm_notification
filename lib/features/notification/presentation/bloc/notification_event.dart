@@ -14,6 +14,13 @@ class GetAppNotificationsEvent extends NotificationEvent {
   List<Object> get props => [appId];
 }
 
+class GetNotificationEvent extends NotificationEvent {
+  final String id;
+  const GetNotificationEvent({required this.id});
+  @override
+  List<Object> get props => [id];
+}
+
 class CreateNotificationEvent extends NotificationEvent {
   final NotificationEntity notification;
   const CreateNotificationEvent({required this.notification});

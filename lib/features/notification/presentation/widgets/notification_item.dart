@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:fcm_notification/core/router/app_router.dart';
-import 'package:fcm_notification/core/widgets/k_bottom_sheet.dart';
 import 'package:sweetsheet/sweetsheet.dart';
 
 import '../../../../core/constants/colors.dart';
+import '../../../../core/widgets/k_bottom_sheet.dart';
 import '../../../../core/widgets/k_card.dart';
 import '../../../../core/widgets/k_icon_button.dart';
 import '../../domain/entities/notification_entity.dart';
@@ -134,11 +134,10 @@ class NotificationItem extends StatelessWidget {
                         icon: Icons.zoom_out_map_rounded,
                         iconColor: KColors.info,
                         onPressed: () {
-                          //! Implement later
                           router.pushNamed(
                             AppRouter.notificationDetailPage,
                             params: {
-                              'notificationId': 10.toString(),
+                              'notificationId': notification.id,
                             },
                           );
                         },

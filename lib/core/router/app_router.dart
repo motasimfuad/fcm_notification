@@ -81,7 +81,7 @@ final router = GoRouter(
         return MaterialPage(
           key: state.pageKey,
           child: NotificationDetailPage(
-            id: int.parse(notificationId.toString()),
+            id: notificationId.toString(),
           ),
         );
       },
@@ -90,8 +90,6 @@ final router = GoRouter(
       name: AppRouter.createNotificationPage,
       path: '/:appId/${AppRouter.createNotificationPage}',
       pageBuilder: (context, state) {
-        print(state.path);
-        print(state.params);
         final appId = state.params['appId'];
 
         return MaterialPage(

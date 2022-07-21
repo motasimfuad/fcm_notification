@@ -61,7 +61,7 @@ class KImageContainer extends StatelessWidget {
         height: height,
         width: width ?? double.infinity,
         decoration: BoxDecoration(
-          color: Colors.grey.shade100,
+          color: KColors.primary.shade300,
           borderRadius: BorderRadius.circular(radius ?? 20.r),
           border: hasBorder == true
               ? Border.all(
@@ -133,10 +133,11 @@ class KImageContainer extends StatelessWidget {
       imageUrl: imageUrl ?? '',
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(radius ?? 20.r),
           image: DecorationImage(
             image: imageProvider,
-            scale: 1.0,
             fit: imageFit ?? BoxFit.cover,
+            scale: 1.0,
           ),
         ),
       ),
@@ -157,6 +158,7 @@ class KImageContainer extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 10.sp,
+          color: KColors.primary.shade100,
         ),
       ),
     );

@@ -88,15 +88,15 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
   Widget build(BuildContext context) {
     //!
 
-    _nameController.text = 'only test --- DELETE ME';
-    _topicNameController.text = 'Test Topic';
+    _nameController.text = 'only device id';
+    // _topicNameController.text = 'Test Topic';
     _deviceIdController.text = 'Test Device Id';
     _titleController.text = 'Test Title';
     _bodyController.text = 'Test Body';
     _dataKeyController.text = 'Test Data Key';
     _dataValueController.text = 'Test Data Value';
-    _imageLinkController.text =
-        'https://blog.tryshiftcdn.com/uploads/2021/01/notifications@2x.jpg';
+    // _imageLinkController.text =
+    //     'https://blog.tryshiftcdn.com/uploads/2021/01/notifications@2x.jpg';
 
     //!
     return Scaffold(
@@ -135,7 +135,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                   KTextField(
                     hintText: 'Notification Name *',
                     controller: _nameController,
-                    // autofocus: true, //! make true
+                    autofocus: true,
                     validator: (value) {
                       if (value!.trim().isEmpty) {
                         return 'Notification name is required!';
@@ -159,6 +159,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                           subtitle: 'Topic name required',
                           icon: Icons.alt_route_outlined,
                           onChanged: (value) {
+                            _deviceIdController.clear();
                             setState(() {
                               _notificationReceiverType =
                                   value as NotificationReceiverType;
@@ -172,6 +173,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                           subtitle: 'Device id required',
                           icon: Icons.turn_slight_right_sharp,
                           onChanged: (value) {
+                            _topicNameController.clear();
                             setState(() {
                               _notificationReceiverType =
                                   value as NotificationReceiverType;
