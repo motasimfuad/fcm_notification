@@ -74,15 +74,15 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                       label: 'Device ID',
                       value: notification?.deviceId,
                     ),
-                    (notification?.topicName != null &&
-                            notification!.topicName!.isNotEmpty)
+                    (notification?.title != null &&
+                            notification!.title!.isNotEmpty)
                         ? buildNotificationFields()
-                        : const SizedBox(),
+                        : buildDataMessageFields(),
                     // SizedBox(height: 20.w),
-                    (notification?.deviceId != null &&
-                            notification!.deviceId!.isNotEmpty)
-                        ? buildDataMessageFields()
-                        : const SizedBox(),
+                    // (notification?.deviceId != null &&
+                    //         notification!.deviceId!.isNotEmpty)
+                    //     ? buildDataMessageFields()
+                    //     : const SizedBox(),
                   ],
                 ),
               );

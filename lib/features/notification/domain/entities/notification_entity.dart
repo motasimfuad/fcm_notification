@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/constants/enums.dart';
+
 class NotificationEntity extends Equatable {
   final String appId;
   final String id;
@@ -16,6 +18,8 @@ class NotificationEntity extends Equatable {
 
   final DateTime createdAt;
   final DateTime? lastSentAt;
+  final NotificationReceiverType? receiverType;
+  final NotificationType? notificationType;
 
   const NotificationEntity({
     required this.appId,
@@ -30,6 +34,8 @@ class NotificationEntity extends Equatable {
     this.dataValue,
     required this.createdAt,
     this.lastSentAt,
+    this.receiverType,
+    this.notificationType,
   });
 
   @override

@@ -39,9 +39,9 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
   final TextEditingController _dataKeyController = TextEditingController();
   final TextEditingController _dataValueController = TextEditingController();
 
-  NotificationType _notificationGroupType = NotificationType.notification;
   NotificationReceiverType _notificationReceiverType =
       NotificationReceiverType.all;
+  NotificationType _notificationGroupType = NotificationType.notification;
 
   bool receiverTypeIsValid = true;
   bool notificationGroupTypeIsValid = true;
@@ -88,7 +88,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
   Widget build(BuildContext context) {
     //!
 
-    _nameController.text = 'only device id';
+    _nameController.text = 'topic with data message';
     // _topicNameController.text = 'Test Topic';
     _deviceIdController.text = 'Test Device Id';
     _titleController.text = 'Test Title';
@@ -215,6 +215,8 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                           subtitle: 'Send a notification',
                           icon: Icons.notification_important_rounded,
                           onChanged: (value) {
+                            _dataKeyController.clear();
+                            _dataValueController.clear();
                             setState(() {
                               _notificationGroupType =
                                   value as NotificationType;
@@ -228,6 +230,9 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                           subtitle: 'Send data message',
                           icon: Icons.message_rounded,
                           onChanged: (value) {
+                            _titleController.clear();
+                            _bodyController.clear();
+                            _imageLinkController.clear();
                             setState(() {
                               _notificationGroupType =
                                   value as NotificationType;
@@ -270,7 +275,10 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
               dataValue: _dataValueController.text.trim(),
               imageUrl: _imageLinkController.text.trim(),
               createdAt: DateTime.now(),
+              receiverType: _notificationReceiverType,
+              notificationType: _notificationGroupType,
             );
+
             context.read<NotificationBloc>().add(
                   CreateNotificationEvent(notification: notificationEntity),
                 );

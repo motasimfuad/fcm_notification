@@ -59,15 +59,31 @@ class NotificationItem extends StatelessWidget {
                         color: KColors.primaryLight,
                       ),
                     ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      'Last Sent: ${notification.lastSentAt ?? 'Never'}',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        color: KColors.primaryLight,
-                      ),
+                    SizedBox(height: 10.h),
+                    Row(
+                      children: [
+                        Text(
+                          notification.title != null
+                              ? 'Notification'
+                              : 'Data Message',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            color: KColors.primaryLight,
+                          ),
+                        ),
+                        SizedBox(width: 8.h),
+                        Text(
+                          'Last Sent: ${notification.lastSentAt ?? 'Never'}',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            color: KColors.primaryLight,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

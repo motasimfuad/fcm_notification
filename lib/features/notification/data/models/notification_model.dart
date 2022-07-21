@@ -2,8 +2,11 @@
 
 import 'dart:convert';
 
-import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
 import 'package:hive/hive.dart';
+
+import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
+
+import '../../../../core/constants/enums.dart';
 
 part 'notification_model.g.dart';
 
@@ -36,6 +39,10 @@ class NotificationModel extends NotificationEntity {
   final DateTime createdAt;
   @HiveField(11)
   final DateTime? lastSentAt;
+  @HiveField(12)
+  final NotificationReceiverType? receiverType;
+  @HiveField(13)
+  final NotificationType? notificationType;
 
   const NotificationModel({
     required this.appId,
@@ -50,6 +57,8 @@ class NotificationModel extends NotificationEntity {
     this.dataValue,
     required this.createdAt,
     this.lastSentAt,
+    this.receiverType,
+    this.notificationType,
   }) : super(
           appId: appId,
           id: id,
@@ -63,6 +72,8 @@ class NotificationModel extends NotificationEntity {
           dataKey: dataKey,
           dataValue: dataValue,
           lastSentAt: lastSentAt,
+          receiverType: receiverType,
+          notificationType: notificationType,
         );
 
   NotificationModel copyWith({
@@ -78,6 +89,8 @@ class NotificationModel extends NotificationEntity {
     String? value,
     DateTime? createdAt,
     DateTime? lastSentAt,
+    NotificationReceiverType? receiverType,
+    NotificationType? notificationType,
   }) {
     return NotificationModel(
       appId: appId ?? this.appId,
@@ -92,6 +105,8 @@ class NotificationModel extends NotificationEntity {
       dataValue: value ?? dataValue,
       createdAt: createdAt ?? this.createdAt,
       lastSentAt: lastSentAt ?? this.lastSentAt,
+      receiverType: receiverType ?? this.receiverType,
+      notificationType: notificationType ?? this.notificationType,
     );
   }
 
@@ -109,6 +124,7 @@ class NotificationModel extends NotificationEntity {
       'value': dataValue,
       'createdAt': createdAt.millisecondsSinceEpoch,
       'lastSentAt': lastSentAt?.millisecondsSinceEpoch,
+      'receiverType': receiverType?.index,
     };
   }
 
@@ -127,6 +143,12 @@ class NotificationModel extends NotificationEntity {
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
       lastSentAt: map['lastSentAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['lastSentAt'])
+          : null,
+      receiverType: map['receiverType'] != null
+          ? NotificationReceiverType.values[map['receiverType']]
+          : null,
+      notificationType: map['notificationType'] != null
+          ? NotificationType.values[map['notificationType']]
           : null,
     );
   }
@@ -154,6 +176,8 @@ class NotificationModel extends NotificationEntity {
       dataValue: notificationEntity.dataValue,
       createdAt: notificationEntity.createdAt,
       lastSentAt: notificationEntity.lastSentAt,
+      receiverType: notificationEntity.receiverType,
+      notificationType: notificationEntity.notificationType,
     );
   }
 
@@ -171,11 +195,13 @@ class NotificationModel extends NotificationEntity {
       dataValue: dataValue,
       createdAt: createdAt,
       lastSentAt: lastSentAt,
+      receiverType: receiverType,
+      notificationType: notificationType,
     );
   }
 
   @override
   String toString() {
-    return 'NotificationModel(appId: $appId ,id: $id, name: $name, topicName: $topicName, deviceId: $deviceId, title: $title, body: $body, imageUrl: $imageUrl, key: $dataKey, value: $dataValue, createdAt: $createdAt, lastSentAt: $lastSentAt)';
+    return 'NotificationModel(appId: $appId ,id: $id, name: $name, topicName: $topicName, deviceId: $deviceId, title: $title, body: $body, imageUrl: $imageUrl, key: $dataKey, value: $dataValue, createdAt: $createdAt, lastSentAt: $lastSentAt, receiverType: $receiverType, notificationType: $notificationType)';
   }
 }

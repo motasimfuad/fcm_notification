@@ -29,13 +29,15 @@ class NotificationModelAdapter extends TypeAdapter<NotificationModel> {
       dataValue: fields[9] as String?,
       createdAt: fields[10] as DateTime,
       lastSentAt: fields[11] as DateTime?,
+      receiverType: fields[12] as NotificationReceiverType?,
+      notificationType: fields[13] as NotificationType?,
     );
   }
 
   @override
   void write(BinaryWriter writer, NotificationModel obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.appId)
       ..writeByte(1)
@@ -59,7 +61,11 @@ class NotificationModelAdapter extends TypeAdapter<NotificationModel> {
       ..writeByte(10)
       ..write(obj.createdAt)
       ..writeByte(11)
-      ..write(obj.lastSentAt);
+      ..write(obj.lastSentAt)
+      ..writeByte(12)
+      ..write(obj.receiverType)
+      ..writeByte(13)
+      ..write(obj.notificationType);
   }
 
   @override
