@@ -21,7 +21,7 @@ class AppModelAdapter extends TypeAdapter<AppModel> {
       name: fields[1] as String,
       serverKey: fields[2] as String,
       iconName: fields[3] as String?,
-      notifications: fields[4] as List<NotificationModel?>?,
+      notifications: (fields[4] as List?)?.cast<NotificationModel?>(),
       createdAt: fields[5] as DateTime,
     );
   }

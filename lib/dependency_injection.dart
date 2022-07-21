@@ -86,13 +86,14 @@ Future<void> init() async {
 
   //! external
   // hive
-  // app box
   Hive.registerAdapter(AppModelAdapter());
+  Hive.registerAdapter(NotificationModelAdapter());
+
+  // app box
   var appBox = await Hive.openBox<AppModel>(Strings.appBox);
   getIt.registerLazySingleton(() => appBox);
 
   // notification box
-  Hive.registerAdapter(NotificationModelAdapter());
   var notificationBox =
       await Hive.openBox<NotificationModel>(Strings.notificationBox);
   getIt.registerLazySingleton(() => notificationBox);

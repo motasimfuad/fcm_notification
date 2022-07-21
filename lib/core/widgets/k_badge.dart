@@ -13,6 +13,7 @@ class KBadge extends StatelessWidget {
   final double? radius;
   final Color? badgeColor;
   final Color? textColor;
+  final FontWeight? fontWeight;
   const KBadge({
     Key? key,
     this.badgeContent,
@@ -23,6 +24,7 @@ class KBadge extends StatelessWidget {
     this.radius,
     this.badgeColor,
     this.textColor,
+    this.fontWeight,
   }) : super(key: key);
 
   @override
@@ -43,6 +45,7 @@ class KBadge extends StatelessWidget {
             style: TextStyle(
               fontSize: textSize ?? 10.sp,
               color: textColor ?? Colors.white,
+              fontWeight: fontWeight ?? FontWeight.w500,
             ),
           ),
     );
