@@ -44,3 +44,12 @@ class NotificationDeletingFailed extends NotificationState {
   @override
   List<Object> get props => [message];
 }
+
+class NotificationDuplicatedState extends NotificationState {}
+
+class NotificationDuplicatingFailed extends NotificationState {
+  final String message;
+  const NotificationDuplicatingFailed({required this.message});
+  @override
+  List<Object> get props => [message];
+}

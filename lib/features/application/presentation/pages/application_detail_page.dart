@@ -171,6 +171,15 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                         context.read<NotificationBloc>().add(
                             GetAppNotificationsEvent(appId: widget.appId!));
                       }
+                      if (state is NotificationDuplicatedState) {
+                        kSnackBar(
+                          context: context,
+                          type: AlertType.success,
+                          message: 'Notification duplicated successfully!',
+                        );
+                        context.read<NotificationBloc>().add(
+                            GetAppNotificationsEvent(appId: widget.appId!));
+                      }
                     },
                     builder: (context, state) {
                       return Expanded(

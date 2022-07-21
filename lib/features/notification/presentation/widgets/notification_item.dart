@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:fcm_notification/core/router/app_router.dart';
-import 'package:fcm_notification/core/widgets/k_bttom_sheet.dart';
+import 'package:fcm_notification/core/widgets/k_bottom_sheet.dart';
+import 'package:sweetsheet/sweetsheet.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/widgets/k_card.dart';
@@ -112,7 +113,21 @@ class NotificationItem extends StatelessWidget {
                       KIconButton(
                         icon: Icons.copy_all_rounded,
                         iconColor: KColors.success,
-                        onPressed: () {},
+                        onPressed: () {
+                          kBottomSheet(
+                            context: context,
+                            title: 'Duplicate?',
+                            description: 'Duplicate this notification?',
+                            icon: Icons.copy_all_rounded,
+                            color: SweetSheetColor.SUCCESS,
+                            positiveAction: () {
+                              context.read<NotificationBloc>().add(
+                                  DuplicateNotificationEvent(
+                                      notification: notification));
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
                       ),
                       SizedBox(width: 10.w),
                       KIconButton(

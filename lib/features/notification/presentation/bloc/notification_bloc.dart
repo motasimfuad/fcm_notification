@@ -6,6 +6,7 @@ import 'package:fcm_notification/features/notification/domain/usecases/delete_no
 import 'package:fcm_notification/features/notification/domain/usecases/get_app_notifications_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/get_notification_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/update_notification_usecase.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/entities/notification_entity.dart';
@@ -60,6 +61,33 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         deleted.fold(
           (l) => emit(NotificationDeletingFailed(message: l.toString())),
           (r) => emit(NotificationDeletedState()),
+        );
+      }
+
+      // duplicate notification
+      if (event is DuplicateNotificationEvent) {
+        final notification = event.notification;
+        NotificationEntity duplicatedNotification = NotificationEntity(
+          appId: notification.appId,
+          id: const Uuid().v1(),
+          name: '${notification.name} (duplicated)',
+          topicName: notification.topicName,
+          deviceId: notification.deviceId,
+          title: notification.title,
+          body: notification.body,
+          imageUrl: notification.imageUrl,
+          dataKey: notification.dataKey,
+          dataValue: notification.dataValue,
+          lastSentAt: null,
+          createdAt: DateTime.now(),
+        );
+
+        final duplicated = await createNotification(Params(
+          notification: duplicatedNotification,
+        ));
+        duplicated.fold(
+          (l) => emit(NotificationDuplicatingFailed(message: l.toString())),
+          (r) => emit(NotificationDuplicatedState()),
         );
       }
     });

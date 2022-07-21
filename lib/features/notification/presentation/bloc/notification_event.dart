@@ -27,3 +27,10 @@ class DeleteNotificationEvent extends NotificationEvent {
   @override
   List<Object> get props => [id];
 }
+
+class DuplicateNotificationEvent extends NotificationEvent {
+  final NotificationEntity notification;
+  const DuplicateNotificationEvent({required this.notification});
+  @override
+  List<Object> get props => [notification];
+}
