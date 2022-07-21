@@ -1,4 +1,8 @@
+import 'dart:developer';
+
+import 'package:fcm_notification/core/constants/enums.dart';
 import 'package:fcm_notification/core/router/app_router.dart';
+import 'package:fcm_notification/features/notification/data/models/notification_model.dart';
 import 'package:fcm_notification/features/notification/presentation/widgets/notification_fab_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,6 +36,7 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
   @override
   void initState() {
     context.read<NotificationBloc>().add(GetNotificationEvent(id: widget.id));
+
     super.initState();
   }
 
@@ -56,6 +61,8 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
             builder: (context, state) {
               if (state is NotificationLoaded) {
                 notification = state.notification;
+                log(NotificationModel.fromNotificationEntity(notification!)
+                    .toString());
               }
 
               return SingleChildScrollView(
@@ -66,23 +73,19 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                       label: 'Notification Name',
                       value: notification?.name,
                     ),
-                    NotificationDetailItem(
-                      label: 'Topic Name',
-                      value: notification?.topicName,
-                    ),
-                    NotificationDetailItem(
-                      label: 'Device ID',
-                      value: notification?.deviceId,
-                    ),
-                    (notification?.title != null &&
-                            notification!.title!.isNotEmpty)
+                    (notification?.receiverType == NotificationReceiverType.all)
+                        ? NotificationDetailItem(
+                            label: 'Topic Name',
+                            value: notification?.topicName,
+                          )
+                        : NotificationDetailItem(
+                            label: 'Device ID',
+                            value: notification?.deviceId,
+                          ),
+                    (notification?.notificationType ==
+                            NotificationType.notification)
                         ? buildNotificationFields()
                         : buildDataMessageFields(),
-                    // SizedBox(height: 20.w),
-                    // (notification?.deviceId != null &&
-                    //         notification!.deviceId!.isNotEmpty)
-                    //     ? buildDataMessageFields()
-                    //     : const SizedBox(),
                   ],
                 ),
               );

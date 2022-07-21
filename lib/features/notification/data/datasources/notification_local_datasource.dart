@@ -40,7 +40,7 @@ class NotificationLocalDatasourceImpl implements NotificationLocalDatasource {
   Future<void> deleteAppNotifications({required String appId}) async {
     final notifications = notificationBox.values
         .where((element) => element.appId == appId)
-        .toList();
+        .map((e) => e.id);
     return await notificationBox.deleteAll(notifications);
   }
 

@@ -11,6 +11,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../../../core/widgets/k_bottom_sheet.dart';
+import '../../../notification/presentation/bloc/notification_bloc.dart';
+
 class ApplicationsPage extends StatefulWidget {
   const ApplicationsPage({Key? key}) : super(key: key);
 
@@ -94,9 +97,23 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                                     );
                                   },
                                   onDeleteTap: () {
-                                    context.read<ApplicationBloc>().add(
-                                          DeleteAppEvent(app.id),
-                                        );
+                                    kBottomSheet(
+                                      context: context,
+                                      description:
+                                          'Do you really want to delete this Application? All notifications related to this application will also be deleted.',
+                                      icon: Icons.delete_sweep_rounded,
+                                      positiveTitle: 'YES, DELETE IT',
+                                      positiveAction: () {
+                                        Navigator.pop(context);
+                                        context.read<ApplicationBloc>().add(
+                                              DeleteAppEvent(app.id),
+                                            );
+                                        context.read<NotificationBloc>().add(
+                                              DeleteAppNotificationsEvent(
+                                                  appId: app.id),
+                                            );
+                                      },
+                                    );
                                   },
                                   onEditTap: () {
                                     router.pushNamed(

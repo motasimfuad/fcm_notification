@@ -14,6 +14,7 @@ import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:sweetsheet/sweetsheet.dart';
 
+import 'core/constants/enums.dart';
 import 'features/application/data/datasources/app_local_datasource.dart';
 import 'features/application/data/models/app_model.dart';
 import 'features/application/domain/usecases/get_all_apps_usecase.dart';
@@ -91,6 +92,8 @@ Future<void> init() async {
   // hive
   Hive.registerAdapter(AppModelAdapter());
   Hive.registerAdapter(NotificationModelAdapter());
+  Hive.registerAdapter(NotificationReceiverTypeAdapter());
+  Hive.registerAdapter(NotificationTypeAdapter());
 
   // app box
   var appBox = await Hive.openBox<AppModel>(Strings.appBox);

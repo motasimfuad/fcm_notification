@@ -13,6 +13,7 @@ kBottomSheet({
   String? negativeTitle,
   Function()? positiveAction,
   IconData? icon,
+  IconData? positiveIcon,
   required BuildContext context,
 }) {
   getIt<SweetSheet>().show(
@@ -27,6 +28,7 @@ kBottomSheet({
             Navigator.of(context).pop();
           },
       title: positiveTitle ?? 'CONFIRM',
+      icon: positiveIcon,
     ),
     negative: SweetSheetAction(
       onPressed: () {
