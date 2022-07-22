@@ -48,3 +48,17 @@ class DuplicateNotificationEvent extends NotificationEvent {
   @override
   List<Object> get props => [notification];
 }
+
+class ToggleNotificationSoundEvent extends NotificationEvent {
+  final int index;
+  const ToggleNotificationSoundEvent({required this.index});
+  @override
+  List<Object> get props => [index];
+}
+
+class EditNotificationEvent extends NotificationEvent {
+  final NotificationEntity notification;
+  const EditNotificationEvent({required this.notification});
+  @override
+  List<Object> get props => [notification];
+}

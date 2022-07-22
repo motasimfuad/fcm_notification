@@ -12,6 +12,7 @@ class AppRouter {
   static const String applicationDetailPage = 'app-details';
   static const String applicationEditPage = 'edit-app';
   static const String createNotificationPage = 'create-notification';
+  static const String editNotificationPage = 'edit-notification';
   static const String notificationDetailPage = 'notification-details';
 }
 
@@ -86,6 +87,26 @@ final router = GoRouter(
         );
       },
     ),
+
+    // notification edit on create page
+    GoRoute(
+      name: AppRouter.editNotificationPage,
+      path: '/:appId/${AppRouter.editNotificationPage}:notificationId',
+      pageBuilder: (context, state) {
+        final appId = state.params['appId'];
+        final notificationId = state.params['notificationId'];
+
+        return MaterialPage(
+          key: state.pageKey,
+          child: CreateNotificationPage(
+            appId: appId.toString(),
+            notificationId: notificationId,
+          ),
+        );
+      },
+    ),
+
+    // create notification page
     GoRoute(
       name: AppRouter.createNotificationPage,
       path: '/:appId/${AppRouter.createNotificationPage}',

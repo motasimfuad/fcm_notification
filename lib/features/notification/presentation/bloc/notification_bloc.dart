@@ -63,7 +63,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         ));
         notification.fold(
           (l) => emit(NotificationLoadingFailed(message: l.toString())),
-          (r) => emit(NotificationLoaded(notification: r)),
+          (r) => emit(NotificationLoadedState(notification: r)),
         );
       }
 
@@ -117,6 +117,25 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
           (l) => emit(NotificationDuplicatingFailed(message: l.toString())),
           (r) => emit(NotificationDuplicatedState()),
         );
+      }
+
+      // edit notification
+      if (event is EditNotificationEvent) {
+        emit(NotificationLoading());
+        final updated = await updateNotification(Params(
+          notification: event.notification,
+        ));
+        updated.fold(
+          (l) => emit(NotificationEditingFailed(message: l.toString())),
+          (r) => emit(NotificationEditedState()),
+        );
+      }
+
+      // toggle notification sound
+      if (event is ToggleNotificationSoundEvent) {
+        emit(NotificationSoundLoadingState());
+        emit(NotificationSoundToggledState(
+            soundIsOn: (event.index == 1) ? true : false));
       }
     });
   }

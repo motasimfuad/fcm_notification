@@ -1,7 +1,7 @@
-import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:fcm_notification/core/constants/enums.dart';
 import 'package:fcm_notification/core/widgets/k_appbar.dart';
@@ -9,7 +9,7 @@ import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/core/widgets/k_radio_tile.dart';
 import 'package:fcm_notification/core/widgets/k_snack_bar.dart';
 import 'package:fcm_notification/core/widgets/k_textfield.dart';
-import 'package:uuid/uuid.dart';
+import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/router/app_router.dart';
@@ -18,9 +18,11 @@ import '../bloc/notification_bloc.dart';
 
 class CreateNotificationPage extends StatefulWidget {
   final String appId;
+  final String? notificationId;
   const CreateNotificationPage({
     Key? key,
     required this.appId,
+    this.notificationId,
   }) : super(key: key);
 
   @override
@@ -45,6 +47,8 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
 
   bool receiverTypeIsValid = true;
   bool notificationGroupTypeIsValid = true;
+
+  NotificationEntity? notificationForEditing;
 
   validateReceiverType() {
     if ((_notificationReceiverType == NotificationReceiverType.all) &&
@@ -85,24 +89,36 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
   }
 
   @override
+  void initState() {
+    if (widget.notificationId != null) {
+      context
+          .read<NotificationBloc>()
+          .add(GetNotificationEvent(id: widget.notificationId!));
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //!
 
-    _nameController.text = 'topic with data message';
-    // _topicNameController.text = 'Test Topic';
-    _deviceIdController.text = 'Test Device Id';
-    _titleController.text = 'Test Title';
-    _bodyController.text = 'Test Body';
-    _dataKeyController.text = 'Test Data Key';
-    _dataValueController.text = 'Test Data Value';
-    // _imageLinkController.text =
-    //     'https://blog.tryshiftcdn.com/uploads/2021/01/notifications@2x.jpg';
+    // _nameController.text = 'topic with data message';
+    // // _topicNameController.text = 'Test Topic';
+    // _deviceIdController.text = 'Test Device Id';
+    // _titleController.text = 'Test Title';
+    // _bodyController.text = 'Test Body';
+    // _dataKeyController.text = 'Test Data Key';
+    // _dataValueController.text = 'Test Data Value';
+    // // _imageLinkController.text =
+    // //     'https://blog.tryshiftcdn.com/uploads/2021/01/notifications@2x.jpg';
 
     //!
     return Scaffold(
       backgroundColor: KColors.background,
-      appBar: const KAppbar(
-        title: 'Create Notification',
+      appBar: KAppbar(
+        title: (widget.notificationId == null)
+            ? 'Create Notification'
+            : 'Edit Notification',
       ),
       body: BlocConsumer<NotificationBloc, NotificationState>(
         listener: (context, state) {
@@ -117,6 +133,55 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                 .read<NotificationBloc>()
                 .add(GetAppNotificationsEvent(appId: widget.appId));
             router.pop();
+          }
+          if (state is NotificationEditedState) {
+            kSnackBar(
+              context: context,
+              type: AlertType.success,
+              message: 'Notification updated successfully!',
+            );
+
+            context
+                .read<NotificationBloc>()
+                .add(GetAppNotificationsEvent(appId: widget.appId));
+            if (widget.notificationId != null) {
+              context
+                  .read<NotificationBloc>()
+                  .add(GetNotificationEvent(id: widget.notificationId!));
+            }
+            router.pop();
+          }
+          if (state is NotificationLoadedState) {
+            if (widget.notificationId != null) {
+              notificationForEditing = state.notification;
+
+              _nameController.text = notificationForEditing?.name ?? '';
+
+              if (notificationForEditing?.receiverType ==
+                  NotificationReceiverType.all) {
+                _notificationReceiverType = NotificationReceiverType.all;
+                _topicNameController.text =
+                    notificationForEditing?.topicName ?? '';
+              } else {
+                _notificationReceiverType = NotificationReceiverType.single;
+                _deviceIdController.text =
+                    notificationForEditing?.deviceId ?? '';
+              }
+
+              if (notificationForEditing?.notificationType ==
+                  NotificationType.notification) {
+                _notificationGroupType = NotificationType.notification;
+                _titleController.text = notificationForEditing!.title!;
+                _bodyController.text = notificationForEditing!.body!;
+                if (notificationForEditing?.imageUrl != null) {
+                  _imageLinkController.text = notificationForEditing!.imageUrl!;
+                }
+              } else {
+                _notificationGroupType = NotificationType.dataMessage;
+                _dataKeyController.text = notificationForEditing!.dataKey!;
+                _dataValueController.text = notificationForEditing!.dataValue!;
+              }
+            }
           }
         },
         builder: (context, state) {
@@ -135,7 +200,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                   KTextField(
                     hintText: 'Notification Name *',
                     controller: _nameController,
-                    autofocus: true,
+                    // autofocus: true,
                     validator: (value) {
                       if (value!.trim().isEmpty) {
                         return 'Notification name is required!';
@@ -159,11 +224,13 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                           subtitle: 'Topic name required',
                           icon: Icons.alt_route_outlined,
                           onChanged: (value) {
-                            _deviceIdController.clear();
                             setState(() {
                               _notificationReceiverType =
                                   value as NotificationReceiverType;
                             });
+                            if (widget.notificationId == null) {
+                              _deviceIdController.clear();
+                            }
                           },
                         ),
                         KRadioTile(
@@ -173,11 +240,13 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                           subtitle: 'Device id required',
                           icon: Icons.turn_slight_right_sharp,
                           onChanged: (value) {
-                            _topicNameController.clear();
                             setState(() {
                               _notificationReceiverType =
                                   value as NotificationReceiverType;
                             });
+                            if (widget.notificationId == null) {
+                              _topicNameController.clear();
+                            }
                           },
                         ),
                         SizedBox(height: 15.h),
@@ -215,12 +284,14 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                           subtitle: 'Send a notification',
                           icon: Icons.notification_important_rounded,
                           onChanged: (value) {
-                            _dataKeyController.clear();
-                            _dataValueController.clear();
                             setState(() {
                               _notificationGroupType =
                                   value as NotificationType;
                             });
+                            if (widget.notificationId == null) {
+                              _dataKeyController.clear();
+                              _dataValueController.clear();
+                            }
                           },
                         ),
                         KRadioTile(
@@ -230,13 +301,15 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                           subtitle: 'Send data message',
                           icon: Icons.message_rounded,
                           onChanged: (value) {
-                            _titleController.clear();
-                            _bodyController.clear();
-                            _imageLinkController.clear();
                             setState(() {
                               _notificationGroupType =
                                   value as NotificationType;
                             });
+                            if (widget.notificationId == null) {
+                              _titleController.clear();
+                              _bodyController.clear();
+                              _imageLinkController.clear();
+                            }
                           },
                         ),
                         SizedBox(height: 15.h),
@@ -254,7 +327,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
         },
       ),
       floatingActionButton: KFab(
-        label: 'CREATE',
+        label: (widget.notificationId == null) ? 'CREATE' : 'UPDATE',
         icon: Icons.notification_add_sharp,
         onPressed: () {
           bool? isValid = _formKey.currentState?.validate();
@@ -263,25 +336,11 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
           if (isValid == true &&
               receiverTypeIsValid == true &&
               notificationGroupTypeIsValid == true) {
-            NotificationEntity notificationEntity = NotificationEntity(
-              appId: widget.appId,
-              id: const Uuid().v1(),
-              name: _nameController.text.trim(),
-              topicName: _topicNameController.text.trim(),
-              deviceId: _deviceIdController.text.trim(),
-              title: _titleController.text.trim(),
-              body: _bodyController.text.trim(),
-              dataKey: _dataKeyController.text.trim(),
-              dataValue: _dataValueController.text.trim(),
-              imageUrl: _imageLinkController.text.trim(),
-              createdAt: DateTime.now(),
-              receiverType: _notificationReceiverType,
-              notificationType: _notificationGroupType,
-            );
-
-            context.read<NotificationBloc>().add(
-                  CreateNotificationEvent(notification: notificationEntity),
-                );
+            if (widget.notificationId != null) {
+              updateNotification(context);
+            } else {
+              createNotification(context);
+            }
           } else {
             kSnackBar(
               context: context,
@@ -292,6 +351,66 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
         },
       ),
     );
+  }
+
+  void createNotification(BuildContext context) {
+    NotificationEntity notificationEntity = NotificationEntity(
+      appId: widget.appId,
+      id: const Uuid().v1(),
+      name: _nameController.text.trim(),
+      topicName: _topicNameController.text.trim(),
+      deviceId: _deviceIdController.text.trim(),
+      title: _titleController.text.trim(),
+      body: _bodyController.text.trim(),
+      dataKey: _dataKeyController.text.trim(),
+      dataValue: _dataValueController.text.trim(),
+      imageUrl: _imageLinkController.text.trim(),
+      createdAt: DateTime.now(),
+      receiverType: _notificationReceiverType,
+      notificationType: _notificationGroupType,
+    );
+
+    context.read<NotificationBloc>().add(
+          CreateNotificationEvent(notification: notificationEntity),
+        );
+  }
+
+  void updateNotification(BuildContext context) {
+    // clear the unused fields
+    if (_notificationReceiverType == NotificationReceiverType.all) {
+      _deviceIdController.clear();
+    } else {
+      _topicNameController.clear();
+    }
+    if (_notificationGroupType == NotificationType.notification) {
+      _dataKeyController.clear();
+      _dataValueController.clear();
+    } else {
+      _titleController.clear();
+      _bodyController.clear();
+      _imageLinkController.clear();
+    }
+
+    NotificationEntity notificationUpdateEntity = NotificationEntity(
+      appId: notificationForEditing!.appId,
+      id: notificationForEditing!.id,
+      name: _nameController.text.trim(),
+      topicName: _topicNameController.text.trim(),
+      deviceId: _deviceIdController.text.trim(),
+      title: _titleController.text.trim(),
+      body: _bodyController.text.trim(),
+      dataKey: _dataKeyController.text.trim(),
+      dataValue: _dataValueController.text.trim(),
+      imageUrl: _imageLinkController.text.trim(),
+      createdAt: notificationForEditing!.createdAt,
+      lastSentAt: notificationForEditing!.lastSentAt,
+      receiverType: _notificationReceiverType,
+      notificationType: _notificationGroupType,
+    );
+
+    context.read<NotificationBloc>().add(
+          EditNotificationEvent(notification: notificationUpdateEntity),
+        );
   }
 
   Column buildNotificationFields() {

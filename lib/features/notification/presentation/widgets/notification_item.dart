@@ -61,7 +61,7 @@ class NotificationItem extends StatelessWidget {
                         color: KColors.primaryLight,
                       ),
                     ),
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 12.h),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -88,14 +88,10 @@ class NotificationItem extends StatelessWidget {
                               ),
                       ],
                     ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      'Last Sent: ${notification.lastSentAt ?? 'Never'}',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                        color: KColors.primaryLight,
-                      ),
+                    SizedBox(height: 8.h),
+                    NotificationTypeInfoWidget(
+                      title: 'Last Sent: ${notification.lastSentAt ?? 'Never'}',
+                      icon: Icons.send_time_extension,
                     ),
                   ],
                 ),
@@ -135,7 +131,15 @@ class NotificationItem extends StatelessWidget {
                       KIconButton(
                         icon: Icons.edit_note_rounded,
                         iconColor: KColors.info,
-                        onPressed: () {},
+                        onPressed: () {
+                          router.pushNamed(
+                            AppRouter.editNotificationPage,
+                            params: {
+                              'appId': notification.appId,
+                              'notificationId': notification.id,
+                            },
+                          );
+                        },
                       ),
                       SizedBox(width: 10.w),
                       KIconButton(

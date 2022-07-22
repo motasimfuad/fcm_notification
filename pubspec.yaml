@@ -50,6 +50,7 @@ dependencies:
   lottie: ^1.3.0
   path_provider: ^2.0.11
   sweetsheet: ^0.4.0
+  toggle_switch: ^2.0.1
   uuid: ^3.0.6
 
 dev_dependencies:

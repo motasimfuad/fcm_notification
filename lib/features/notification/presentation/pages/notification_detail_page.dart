@@ -54,12 +54,26 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
           onTapDuplicate: () {
             notificationDuplicateMethod(context);
           },
-          onTapEdit: () {},
+          onTapEdit: () {
+            router.pushNamed(
+              AppRouter.editNotificationPage,
+              params: {
+                'appId': notification!.appId,
+                'notificationId': notification!.id,
+              },
+            );
+          },
           onTapSend: () {},
           child: BlocConsumer<NotificationBloc, NotificationState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is NotificationEditedState) {
+                context
+                    .read<NotificationBloc>()
+                    .add(GetNotificationEvent(id: widget.id));
+              }
+            },
             builder: (context, state) {
-              if (state is NotificationLoaded) {
+              if (state is NotificationLoadedState) {
                 notification = state.notification;
                 log(NotificationModel.fromNotificationEntity(notification!)
                     .toString());

@@ -27,9 +27,9 @@ class NotificationListLoadingFailed extends NotificationState {
 
 class NotificationLoading extends NotificationState {}
 
-class NotificationLoaded extends NotificationState {
+class NotificationLoadedState extends NotificationState {
   final NotificationEntity notification;
-  const NotificationLoaded({required this.notification});
+  const NotificationLoadedState({required this.notification});
   @override
   List<Object> get props => [notification];
 }
@@ -64,6 +64,24 @@ class NotificationDuplicatedState extends NotificationState {}
 class NotificationDuplicatingFailed extends NotificationState {
   final String message;
   const NotificationDuplicatingFailed({required this.message});
+  @override
+  List<Object> get props => [message];
+}
+
+class NotificationSoundLoadingState extends NotificationState {}
+
+class NotificationSoundToggledState extends NotificationState {
+  final bool soundIsOn;
+  const NotificationSoundToggledState({required this.soundIsOn});
+  @override
+  List<Object> get props => [soundIsOn];
+}
+
+class NotificationEditedState extends NotificationState {}
+
+class NotificationEditingFailed extends NotificationState {
+  final String message;
+  const NotificationEditingFailed({required this.message});
   @override
   List<Object> get props => [message];
 }
