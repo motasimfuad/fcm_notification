@@ -14,8 +14,6 @@ import '../../domain/entities/notification_entity.dart';
 import '../bloc/notification_bloc.dart';
 import 'notification_type_info_widget.dart';
 
-// final SweetSheet sweetSheet = SweetSheet();
-
 class NotificationItem extends StatelessWidget {
   final NotificationEntity notification;
   const NotificationItem({
@@ -65,17 +63,6 @@ class NotificationItem extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        notification.receiverType ==
-                                NotificationReceiverType.all
-                            ? const NotificationTypeInfoWidget(
-                                title: 'All Users',
-                                icon: Icons.alt_route_outlined,
-                              )
-                            : const NotificationTypeInfoWidget(
-                                title: 'Single User',
-                                icon: Icons.turn_slight_right_sharp,
-                              ),
-                        SizedBox(width: 15.w),
                         notification.notificationType ==
                                 NotificationType.notification
                             ? const NotificationTypeInfoWidget(
@@ -85,6 +72,17 @@ class NotificationItem extends StatelessWidget {
                             : const NotificationTypeInfoWidget(
                                 title: 'Data Message',
                                 icon: Icons.message_rounded,
+                              ),
+                        SizedBox(width: 12.w),
+                        notification.receiverType ==
+                                NotificationReceiverType.all
+                            ? const NotificationTypeInfoWidget(
+                                title: 'All Users',
+                                icon: Icons.alt_route_outlined,
+                              )
+                            : const NotificationTypeInfoWidget(
+                                title: 'Single User',
+                                icon: Icons.turn_slight_right_sharp,
                               ),
                       ],
                     ),

@@ -100,19 +100,6 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    //!
-
-    // _nameController.text = 'topic with data message';
-    // // _topicNameController.text = 'Test Topic';
-    // _deviceIdController.text = 'Test Device Id';
-    // _titleController.text = 'Test Title';
-    // _bodyController.text = 'Test Body';
-    // _dataKeyController.text = 'Test Data Key';
-    // _dataValueController.text = 'Test Data Value';
-    // // _imageLinkController.text =
-    // //     'https://blog.tryshiftcdn.com/uploads/2021/01/notifications@2x.jpg';
-
-    //!
     return Scaffold(
       backgroundColor: KColors.background,
       appBar: KAppbar(

@@ -21,7 +21,7 @@ class NotificationTypeInfoWidget extends StatelessWidget {
           color: KColors.secondary,
           size: 12.w,
         ),
-        SizedBox(width: 5.w),
+        SizedBox(width: 4.w),
         Text(
           title,
           style: TextStyle(

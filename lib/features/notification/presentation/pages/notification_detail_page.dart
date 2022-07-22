@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:fcm_notification/core/constants/enums.dart';
 import 'package:fcm_notification/core/router/app_router.dart';
-import 'package:fcm_notification/features/notification/data/models/notification_model.dart';
 import 'package:fcm_notification/features/notification/presentation/widgets/notification_fab_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +33,6 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
   @override
   void initState() {
     context.read<NotificationBloc>().add(GetNotificationEvent(id: widget.id));
-
     super.initState();
   }
 
@@ -75,8 +71,6 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
             builder: (context, state) {
               if (state is NotificationLoadedState) {
                 notification = state.notification;
-                log(NotificationModel.fromNotificationEntity(notification!)
-                    .toString());
               }
 
               return SingleChildScrollView(

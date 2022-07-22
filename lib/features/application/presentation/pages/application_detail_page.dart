@@ -1,3 +1,5 @@
+import 'package:fcm_notification/core/widgets/k_card.dart';
+import 'package:fcm_notification/features/notification/presentation/widgets/notification_detail_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +19,7 @@ import '../../../notification/domain/entities/notification_entity.dart';
 import '../../../notification/presentation/bloc/notification_bloc.dart';
 import '../../../notification/presentation/widgets/notification_item.dart';
 import '../widgets/empty_notifications_widget.dart';
+import '../widgets/app_details_toggle_icon.dart';
 
 class ApplicationDetailPage extends StatefulWidget {
   final String? appId;
@@ -30,6 +33,7 @@ class ApplicationDetailPage extends StatefulWidget {
 }
 
 class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
+  double containerHeight = 0;
   AppEntity? app;
   List<NotificationEntity>? notifications = [];
 
@@ -106,21 +110,65 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                           bottomMargin: 0,
                         ),
                       ),
-                      // notificationListIsEmpty()
-                      //     ? const SizedBox()
-                      //     : Positioned(
-                      //         right: 15.w,
-                      //         bottom: 5.w,
-                      //         child: NewNotificationIcon(
-                      //           onTap: () {
-                      //             router.pushNamed(
-                      //               AppRouter.createNotificationPage,
-                      //               params: {'appId': app!.id},
-                      //             );
-                      //           },
-                      //         ),
-                      //       ),
+
+                      // Positioned(
+                      //   bottom: 0,
+                      //   left: 0,
+                      //   right: 0,
+                      //   child: AnimatedContainer(
+                      //     duration: const Duration(seconds: 3),
+                      //     height: 300,
+                      //     color: KColors.grey,
+                      //   ),
+                      // ),
+
+                      notificationListIsEmpty()
+                          ? const SizedBox()
+                          : Positioned(
+                              right: 8.w,
+                              top: 8.w,
+                              child: AppDetailsToggleIcon(
+                                icon: Icons.move_down_sharp,
+                                onStartIconPress: () {
+                                  containerHeight = 220.h;
+                                  setState(() {});
+                                  return true;
+                                },
+                                onEndIconPress: () {
+                                  containerHeight = 0;
+                                  setState(() {});
+                                  return true;
+                                },
+                              ),
+                            ),
                     ],
+                  ),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 400),
+                    height: containerHeight,
+                    padding: EdgeInsets.only(top: 20.w),
+                    child: KCard(
+                      xPadding: 10.w,
+                      yPadding: 0,
+                      color: KColors.background,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            NotificationDetailItem(
+                              label: 'Application Name',
+                              value: app?.name,
+                            ),
+                            NotificationDetailItem(
+                              label: 'Server Key',
+                              value: app?.serverKey,
+                              hasBottomMargin: false,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                   notificationListIsEmpty()
                       ? const SizedBox()
