@@ -20,10 +20,12 @@ class NoParams extends Equatable {
 class Params extends Equatable {
   final String? id;
   final AppEntity? app;
+  final String? serverKey;
   final NotificationEntity? notification;
   const Params({
     this.id,
     this.app,
+    this.serverKey,
     this.notification,
   });
   @override
