@@ -257,6 +257,7 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                                     return NotificationItem(
                                       key: GlobalKey(),
                                       notification: singleNotification,
+                                      app: app,
                                     );
                                   },
                                 ),

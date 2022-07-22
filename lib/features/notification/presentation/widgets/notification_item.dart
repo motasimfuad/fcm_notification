@@ -4,9 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sweetsheet/sweetsheet.dart';
 
 import 'package:fcm_notification/core/router/app_router.dart';
+import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/enums.dart';
+import '../../../../core/services/dio_client.dart';
 import '../../../../core/widgets/k_bottom_sheet.dart';
 import '../../../../core/widgets/k_card.dart';
 import '../../../../core/widgets/k_icon_button.dart';
@@ -14,11 +16,15 @@ import '../../domain/entities/notification_entity.dart';
 import '../bloc/notification_bloc.dart';
 import 'notification_type_info_widget.dart';
 
+DioClient dioClient = DioClient();
+
 class NotificationItem extends StatelessWidget {
   final NotificationEntity notification;
+  final AppEntity? app;
   const NotificationItem({
     Key? key,
     required this.notification,
+    this.app,
   }) : super(key: key);
 
   @override
@@ -177,9 +183,24 @@ class NotificationItem extends StatelessWidget {
                   Row(
                     children: [
                       SizedBox(width: 20.w),
-                      const KIconButton(
-                        // bgColor: KColors.secondary,
+                      KIconButton(
                         iconColor: KColors.secondary,
+                        onPressed: () {
+                          //! DELETE THIS
+                          dioClient.postRequest(
+                            serverKey: app!.serverKey,
+                            data: {
+                              "to": "/topics/boycott-islamophobes",
+                              "priority": "high",
+                              "notification": {
+                                "title": notification.title,
+                                "body": "Test Body",
+                                "image":
+                                    "https://firebase.google.com/images/products/cloud-messaging/cloud-messaging-1.png",
+                              }
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),

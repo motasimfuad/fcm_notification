@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:fcm_notification/core/errors/failures.dart';
 import 'package:fcm_notification/core/usecases/usecase.dart';
 import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
@@ -14,4 +15,6 @@ abstract class NotificationRepository {
       {required NotificationEntity notification});
   Future<Either<Failure, void>> deleteNotification(
       {required String notificationId});
+  Future<Either<Failure, Response>> sendNotification(
+      {required String serverKey, required NotificationEntity notification});
 }
