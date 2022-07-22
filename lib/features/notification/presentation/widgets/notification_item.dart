@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:sweetsheet/sweetsheet.dart';
 
+import 'package:fcm_notification/core/router/app_router.dart';
+
 import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/enums.dart';
 import '../../../../core/widgets/k_bottom_sheet.dart';
 import '../../../../core/widgets/k_card.dart';
 import '../../../../core/widgets/k_icon_button.dart';
 import '../../domain/entities/notification_entity.dart';
 import '../bloc/notification_bloc.dart';
+import 'notification_type_info_widget.dart';
 
 // final SweetSheet sweetSheet = SweetSheet();
 
@@ -61,29 +63,39 @@ class NotificationItem extends StatelessWidget {
                     ),
                     SizedBox(height: 10.h),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          notification.title != null
-                              ? 'Notification'
-                              : 'Data Message',
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FontStyle.italic,
-                            color: KColors.primaryLight,
-                          ),
-                        ),
-                        SizedBox(width: 8.h),
-                        Text(
-                          'Last Sent: ${notification.lastSentAt ?? 'Never'}',
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FontStyle.italic,
-                            color: KColors.primaryLight,
-                          ),
-                        ),
+                        notification.receiverType ==
+                                NotificationReceiverType.all
+                            ? const NotificationTypeInfoWidget(
+                                title: 'All Users',
+                                icon: Icons.alt_route_outlined,
+                              )
+                            : const NotificationTypeInfoWidget(
+                                title: 'Single User',
+                                icon: Icons.turn_slight_right_sharp,
+                              ),
+                        SizedBox(width: 15.w),
+                        notification.notificationType ==
+                                NotificationType.notification
+                            ? const NotificationTypeInfoWidget(
+                                title: 'Notification',
+                                icon: Icons.notification_important_rounded,
+                              )
+                            : const NotificationTypeInfoWidget(
+                                title: 'Data Message',
+                                icon: Icons.message_rounded,
+                              ),
                       ],
+                    ),
+                    SizedBox(height: 10.h),
+                    Text(
+                      'Last Sent: ${notification.lastSentAt ?? 'Never'}',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                        color: KColors.primaryLight,
+                      ),
                     ),
                   ],
                 ),

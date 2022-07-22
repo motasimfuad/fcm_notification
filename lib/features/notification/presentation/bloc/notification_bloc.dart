@@ -96,7 +96,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         NotificationEntity duplicatedNotification = NotificationEntity(
           appId: notification.appId,
           id: const Uuid().v1(),
-          name: '${notification.name} (duplicated)',
+          name: '${notification.name} - (duplicated)',
           topicName: notification.topicName,
           deviceId: notification.deviceId,
           title: notification.title,
@@ -106,6 +106,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
           dataValue: notification.dataValue,
           lastSentAt: null,
           createdAt: DateTime.now(),
+          notificationType: notification.notificationType,
+          receiverType: notification.receiverType,
         );
 
         final duplicated = await createNotification(Params(
