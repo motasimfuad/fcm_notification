@@ -37,7 +37,6 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
 
   @override
   void initState() {
-    print("widget.serverKey: ${widget.serverKey}");
     context.read<NotificationBloc>().add(GetNotificationEvent(id: widget.id));
     super.initState();
   }
@@ -78,7 +77,6 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
               ),
               positiveActionColor: KColors.secondary,
               positiveTitle: 'SEND NOTIFICATION',
-              // positiveIcon: Icons.local_fire_department_sharp,
               positiveAction: () {
                 context.read<NotificationBloc>().add(
                       SendNotificationEvent(

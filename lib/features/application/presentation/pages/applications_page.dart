@@ -36,10 +36,10 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
       backgroundColor: KColors.background,
       appBar: KAppbar(
         title: 'FCM Notification',
-        height: 65.h,
+        height: 55.w,
         content: Image.asset(
           'assets/logo-horizontal.png',
-          height: 30.h,
+          height: 30.w,
         ),
       ),
       body: SafeArea(

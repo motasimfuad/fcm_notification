@@ -20,11 +20,8 @@ class DioClient {
         data: data,
         options: Options(headers: _headers),
       );
-      print('this');
-      print('response ${response.data}');
       return response;
     } on DioError catch (e) {
-      print('response ${e.message}');
       throw RemoteException(message: e.message);
       // return e.response;
     }

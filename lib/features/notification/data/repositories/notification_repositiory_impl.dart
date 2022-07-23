@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:dio/src/response.dart';
+import 'package:dio/dio.dart';
 
 import 'package:fcm_notification/core/errors/exceptions.dart';
 import 'package:fcm_notification/core/errors/failures.dart';
