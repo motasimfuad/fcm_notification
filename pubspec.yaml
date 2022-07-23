@@ -42,6 +42,8 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.0.1
   flutter_keyboard_visibility: ^5.3.0
+  flutter_launcher_icons: ^0.9.3
+  flutter_native_splash: ^2.2.5
   flutter_screenutil: ^5.5.3+2
   focused_menu: ^1.0.5
   get_it: ^7.2.0
@@ -62,6 +64,18 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
+  adaptive_icon_background: "#FFE8C7"
+  adaptive_icon_foreground: "assets/logo_foreground.png"
+
+flutter_native_splash:
+  image: "assets/splash_full.png"
+  color: "#21293b"
+  # background_image: "assets/splash.png"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
@@ -73,6 +87,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/animations/
+    - assets/
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

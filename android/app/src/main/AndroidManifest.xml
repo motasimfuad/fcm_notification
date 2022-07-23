@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.fcm_notification">
    <application
-        android:label="fcm_notification"
+        android:label="FCM Notification"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
