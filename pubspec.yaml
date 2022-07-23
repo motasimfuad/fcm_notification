@@ -30,7 +30,6 @@ dependencies:
   animate_icons: ^2.0.0
   badges: ^2.0.3
   bloc: ^8.0.3
-  build_runner: ^2.2.0
   cached_network_image: ^3.2.1
   cupertino_icons: ^1.0.2
   dartz: ^0.10.1
@@ -51,7 +50,6 @@ dependencies:
   hawk_fab_menu: ^1.1.2
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  hive_generator: ^1.1.3
   image_picker: ^0.8.5+3
   lottie: ^1.3.0
   path_provider: ^2.0.11
@@ -60,6 +58,8 @@ dependencies:
   uuid: ^3.0.6
 
 dev_dependencies:
+  hive_generator: ^1.1.3
+  build_runner: ^2.2.0
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
@@ -67,14 +67,13 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/logo.png"
+  image_path: "assets/logo_foreground.png"
   adaptive_icon_background: "#FFE8C7"
   adaptive_icon_foreground: "assets/logo_foreground.png"
 
 flutter_native_splash:
   image: "assets/splash_full.png"
   color: "#21293b"
-  # background_image: "assets/splash.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
