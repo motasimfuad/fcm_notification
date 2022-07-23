@@ -110,37 +110,23 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                           bottomMargin: 0,
                         ),
                       ),
-
-                      // Positioned(
-                      //   bottom: 0,
-                      //   left: 0,
-                      //   right: 0,
-                      //   child: AnimatedContainer(
-                      //     duration: const Duration(seconds: 3),
-                      //     height: 300,
-                      //     color: KColors.grey,
-                      //   ),
-                      // ),
-
-                      notificationListIsEmpty()
-                          ? const SizedBox()
-                          : Positioned(
-                              right: 8.w,
-                              top: 8.w,
-                              child: AppDetailsToggleIcon(
-                                icon: Icons.move_down_sharp,
-                                onStartIconPress: () {
-                                  containerHeight = 220.h;
-                                  setState(() {});
-                                  return true;
-                                },
-                                onEndIconPress: () {
-                                  containerHeight = 0;
-                                  setState(() {});
-                                  return true;
-                                },
-                              ),
-                            ),
+                      Positioned(
+                        right: 8.w,
+                        top: 8.w,
+                        child: AppDetailsToggleIcon(
+                          icon: Icons.move_down_sharp,
+                          onStartIconPress: () {
+                            containerHeight = 220.h;
+                            setState(() {});
+                            return true;
+                          },
+                          onEndIconPress: () {
+                            containerHeight = 0;
+                            setState(() {});
+                            return true;
+                          },
+                        ),
+                      ),
                     ],
                   ),
                   AnimatedContainer(
@@ -150,6 +136,7 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                     child: KCard(
                       xPadding: 10.w,
                       yPadding: 0,
+                      hasShadow: false,
                       color: KColors.background,
                       child: SingleChildScrollView(
                         child: Column(
@@ -210,6 +197,28 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                               .add(UpdateAppEvent(updateAppEntity));
                         }
                       }
+                      if (state is NotificationSendingFailed) {
+                        kSnackBar(
+                          context: context,
+                          type: AlertType.failed,
+                          message: 'Sending Notification Failed!',
+                        );
+                      }
+                      if (state is NotificationSentState) {
+                        kSnackBar(
+                          context: context,
+                          type: AlertType.success,
+                          message: 'Notification sent successfully!',
+                        );
+                        var updateSentNotification = state.notification;
+                        context.read<NotificationBloc>().add(
+                              EditNotificationEvent(
+                                  notification: updateSentNotification),
+                            );
+
+                        context.read<NotificationBloc>().add(
+                            GetAppNotificationsEvent(appId: widget.appId!));
+                      }
                       if (state is NotificationDeletedState) {
                         kSnackBar(
                           context: context,
@@ -254,11 +263,15 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                                     final singleNotification =
                                         notifications![index];
 
-                                    return NotificationItem(
-                                      key: GlobalKey(),
-                                      notification: singleNotification,
-                                      app: app,
-                                    );
+                                    {
+                                      return NotificationItem(
+                                        key: GlobalKey(),
+                                        notification: singleNotification,
+                                        isLoading:
+                                            (state is NotificationSendingState),
+                                        app: app,
+                                      );
+                                    }
                                   },
                                 ),
                         ),

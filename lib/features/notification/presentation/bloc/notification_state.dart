@@ -85,3 +85,19 @@ class NotificationEditingFailed extends NotificationState {
   @override
   List<Object> get props => [message];
 }
+
+class NotificationSendingState extends NotificationState {}
+
+class NotificationSentState extends NotificationState {
+  final NotificationEntity notification;
+  const NotificationSentState({required this.notification});
+  @override
+  List<Object> get props => [notification];
+}
+
+class NotificationSendingFailed extends NotificationState {
+  final String message;
+  const NotificationSendingFailed({required this.message});
+  @override
+  List<Object> get props => [message];
+}

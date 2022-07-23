@@ -34,7 +34,7 @@ class NotificationDetailItem extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16.sp,
                               color: KColors.primary.shade300,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ],
@@ -61,8 +61,9 @@ class NotificationDetailItem extends StatelessWidget {
                           child: Text(
                             value ?? 'Not Available',
                             style: TextStyle(
-                              fontSize: 16.sp,
+                              fontSize: 17.sp,
                               color: KColors.primary.shade300,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),

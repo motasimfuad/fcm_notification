@@ -4,11 +4,11 @@ import '../../../../core/constants/constants.dart';
 
 class NotificationTypeInfoWidget extends StatelessWidget {
   final String title;
-  final IconData icon;
+  final IconData? icon;
   const NotificationTypeInfoWidget({
     Key? key,
     required this.title,
-    required this.icon,
+    this.icon,
   }) : super(key: key);
 
   @override
@@ -16,19 +16,23 @@ class NotificationTypeInfoWidget extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(
-          icon,
-          color: KColors.secondary,
-          size: 12.w,
-        ),
-        SizedBox(width: 4.w),
+        icon != null
+            ? Padding(
+                padding: EdgeInsets.only(right: 4.w),
+                child: Icon(
+                  icon,
+                  color: KColors.secondary,
+                  size: 12.w,
+                ),
+              )
+            : const SizedBox(),
         Text(
           title,
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.w600,
             fontStyle: FontStyle.italic,
-            color: KColors.primaryLight,
+            color: KColors.primary.shade300,
           ),
         ),
       ],

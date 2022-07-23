@@ -83,6 +83,7 @@ final router = GoRouter(
           key: state.pageKey,
           child: NotificationDetailPage(
             id: notificationId.toString(),
+            serverKey: state.extra as String?,
           ),
         );
       },

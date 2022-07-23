@@ -1,3 +1,4 @@
+import 'package:fcm_notification/core/constants/colors.dart';
 import 'package:fcm_notification/dependency_injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,18 +9,35 @@ import 'package:sweetsheet/sweetsheet.dart';
 kBottomSheet({
   String? title,
   String? description,
+  double? descriptionFontSize,
   CustomSheetColor? color,
   String? positiveTitle,
   String? negativeTitle,
   Function()? positiveAction,
   IconData? icon,
   IconData? positiveIcon,
+  Color? positiveActionColor,
   required BuildContext context,
 }) {
   getIt<SweetSheet>().show(
     context: context,
-    title: Text(title ?? "Attention"),
-    description: Text(description ?? 'Please Confirm!'),
+    title: Text(
+      title ?? "Attention!",
+      style: TextStyle(
+        fontSize: 22.sp,
+        color: KColors.primary.shade50,
+        fontWeight: FontWeight.w500,
+      ),
+      textAlign: TextAlign.start,
+    ),
+    description: Text(
+      description ?? 'Please Confirm!',
+      style: TextStyle(
+        fontSize: descriptionFontSize ?? 18.sp,
+        color: KColors.primary.shade50,
+      ),
+      textAlign: TextAlign.start,
+    ),
     color: color ?? SweetSheetColor.DANGER,
     icon: icon,
     positive: SweetSheetAction(
@@ -29,6 +47,7 @@ kBottomSheet({
           },
       title: positiveTitle ?? 'CONFIRM',
       icon: positiveIcon,
+      color: positiveActionColor ?? Colors.white,
     ),
     negative: SweetSheetAction(
       onPressed: () {

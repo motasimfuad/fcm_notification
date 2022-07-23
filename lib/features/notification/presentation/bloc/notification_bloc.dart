@@ -7,6 +7,7 @@ import 'package:fcm_notification/features/notification/domain/usecases/delete_ap
 import 'package:fcm_notification/features/notification/domain/usecases/delete_notification_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/get_app_notifications_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/get_notification_usecase.dart';
+import 'package:fcm_notification/features/notification/domain/usecases/send_notification_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/update_notification_usecase.dart';
 
 import '../../../../core/usecases/usecase.dart';
@@ -22,6 +23,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final GetNotificationUsecase getNotification;
   final DeleteNotificationUsecase deleteNotification;
   final DeleteAppNotificationsUsecase deleteAppNotifications;
+  final SendNotificationUsecase sendNotification;
 
   NotificationBloc({
     required this.createNotification,
@@ -30,6 +32,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     required this.getNotification,
     required this.deleteNotification,
     required this.deleteAppNotifications,
+    required this.sendNotification,
   }) : super(NotificationInitial()) {
     on<NotificationEvent>((event, emit) async {
       // get apps notifications
@@ -128,6 +131,40 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         updated.fold(
           (l) => emit(NotificationEditingFailed(message: l.toString())),
           (r) => emit(NotificationEditedState()),
+        );
+      }
+
+      // send notification
+      if (event is SendNotificationEvent) {
+        emit(NotificationSendingState());
+        final sent = await sendNotification(Params(
+          notification: event.notification,
+          serverKey: event.serverKey,
+        ));
+        sent.fold(
+          (l) => emit(NotificationSendingFailed(message: l.toString())),
+          (r) {
+            NotificationEntity notification = event.notification;
+
+            NotificationEntity updateSentNotification = NotificationEntity(
+              appId: notification.appId,
+              id: notification.id,
+              name: notification.name,
+              topicName: notification.topicName,
+              deviceId: notification.deviceId,
+              title: notification.title,
+              body: notification.body,
+              imageUrl: notification.imageUrl,
+              dataKey: notification.dataKey,
+              dataValue: notification.dataValue,
+              lastSentAt: DateTime.now(),
+              createdAt: notification.createdAt,
+              notificationType: notification.notificationType,
+              receiverType: notification.receiverType,
+            );
+
+            emit(NotificationSentState(notification: updateSentNotification));
+          },
         );
       }
 

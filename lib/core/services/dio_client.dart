@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import '../errors/exceptions.dart';
+
 class DioClient {
   final Dio _dio = Dio();
 
@@ -20,10 +22,11 @@ class DioClient {
       );
       print('this');
       print('response ${response.data}');
+      return response;
     } on DioError catch (e) {
       print('response ${e.message}');
-      // throw RemoteException(message: e.message);
-      return e.response;
+      throw RemoteException(message: e.message);
+      // return e.response;
     }
   }
 }

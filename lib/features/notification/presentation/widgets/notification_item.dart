@@ -1,3 +1,5 @@
+import 'package:date_time_format/date_time_format.dart';
+import 'package:fcm_notification/core/constants/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +10,6 @@ import 'package:fcm_notification/features/application/domain/entities/app_entity
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/enums.dart';
-import '../../../../core/services/dio_client.dart';
 import '../../../../core/widgets/k_bottom_sheet.dart';
 import '../../../../core/widgets/k_card.dart';
 import '../../../../core/widgets/k_icon_button.dart';
@@ -16,15 +17,15 @@ import '../../domain/entities/notification_entity.dart';
 import '../bloc/notification_bloc.dart';
 import 'notification_type_info_widget.dart';
 
-DioClient dioClient = DioClient();
-
 class NotificationItem extends StatelessWidget {
   final NotificationEntity notification;
   final AppEntity? app;
+  final bool? isLoading;
   const NotificationItem({
     Key? key,
     required this.notification,
     this.app,
+    this.isLoading,
   }) : super(key: key);
 
   @override
@@ -94,7 +95,8 @@ class NotificationItem extends StatelessWidget {
                     ),
                     SizedBox(height: 8.h),
                     NotificationTypeInfoWidget(
-                      title: 'Last Sent: ${notification.lastSentAt ?? 'Never'}',
+                      title:
+                          'Last Sent: ${(notification.lastSentAt != null) ? DateTimeFormat.format(notification.lastSentAt!, format: DateTimeFormats.american) : "Never"}',
                       icon: Icons.send_time_extension,
                     ),
                   ],
@@ -175,6 +177,7 @@ class NotificationItem extends StatelessWidget {
                             params: {
                               'notificationId': notification.id,
                             },
+                            extra: app!.serverKey,
                           );
                         },
                       ),
@@ -185,19 +188,33 @@ class NotificationItem extends StatelessWidget {
                       SizedBox(width: 20.w),
                       KIconButton(
                         iconColor: KColors.secondary,
+                        icon: Icons.send_rounded,
+                        child: isLoading == true
+                            ? const CircularProgressIndicator()
+                            : null,
                         onPressed: () {
-                          //! DELETE THIS
-                          dioClient.postRequest(
-                            serverKey: app!.serverKey,
-                            data: {
-                              "to": "/topics/boycott-islamophobes",
-                              "priority": "high",
-                              "notification": {
-                                "title": notification.title,
-                                "body": "Test Body",
-                                "image":
-                                    "https://firebase.google.com/images/products/cloud-messaging/cloud-messaging-1.png",
-                              }
+                          kBottomSheet(
+                            context: context,
+                            title: 'Send Notification?',
+                            description: Strings.sendConfirmation,
+                            // icon: Icons.local_fire_department_sharp,
+                            descriptionFontSize: 15.5.sp,
+                            color: CustomSheetColor(
+                              main: KColors.primary,
+                              accent: KColors.background,
+                              icon: KColors.secondary,
+                            ),
+                            positiveActionColor: KColors.secondary,
+                            positiveTitle: 'SEND NOTIFICATION',
+                            // positiveIcon: Icons.local_fire_department_sharp,
+                            positiveAction: () {
+                              context.read<NotificationBloc>().add(
+                                    SendNotificationEvent(
+                                      serverKey: app!.serverKey,
+                                      notification: notification,
+                                    ),
+                                  );
+                              Navigator.pop(context);
                             },
                           );
                         },

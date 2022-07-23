@@ -19,14 +19,8 @@ class AppListImage extends StatelessWidget {
       width: 65.w,
       padding: EdgeInsets.all(2.w),
       decoration: BoxDecoration(
-        color: KColors.primary.shade700,
-        // color: Colors.white,
-        borderRadius: BorderRadius.circular(15.r),
-        border: Border.all(
-          color: KColors.primary.shade700,
-          // color: Colors.white,
-          width: 1.w,
-        ),
+        color: KColors.background,
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: ClipRRect(
         clipBehavior: Clip.antiAlias,

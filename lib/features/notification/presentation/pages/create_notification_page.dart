@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uuid/uuid.dart';
 
@@ -31,6 +34,8 @@ class CreateNotificationPage extends StatefulWidget {
 
 class _CreateNotificationPageState extends State<CreateNotificationPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late StreamSubscription<bool> keyboardSubscription;
+  bool? isKeyboardVisible;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _topicNameController = TextEditingController();
@@ -95,6 +100,15 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
           .read<NotificationBloc>()
           .add(GetNotificationEvent(id: widget.notificationId!));
     }
+
+    var keyboardVisibilityController = KeyboardVisibilityController();
+
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+      setState(() {
+        isKeyboardVisible = visible;
+      });
+    });
     super.initState();
   }
 
@@ -102,6 +116,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KColors.background,
+      resizeToAvoidBottomInset: true,
       appBar: KAppbar(
         title: (widget.notificationId == null)
             ? 'Create Notification'
@@ -178,11 +193,12 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
               left: 20.w,
               right: 20.w,
               top: 10.h,
-              bottom: 20.h,
+              bottom: 100.h + MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Form(
               key: _formKey,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   KTextField(
                     hintText: 'Notification Name *',
@@ -306,37 +322,39 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 70.h),
+                  SizedBox(height: 100.h),
                 ],
               ),
             ),
           );
         },
       ),
-      floatingActionButton: KFab(
-        label: (widget.notificationId == null) ? 'CREATE' : 'UPDATE',
-        icon: Icons.notification_add_sharp,
-        onPressed: () {
-          bool? isValid = _formKey.currentState?.validate();
-          validateReceiverType();
-          validateNotificationGroupType();
-          if (isValid == true &&
-              receiverTypeIsValid == true &&
-              notificationGroupTypeIsValid == true) {
-            if (widget.notificationId != null) {
-              updateNotification(context);
-            } else {
-              createNotification(context);
-            }
-          } else {
-            kSnackBar(
-              context: context,
-              type: AlertType.failed,
-              message: 'Please fill all the required fields',
-            );
-          }
-        },
-      ),
+      floatingActionButton: isKeyboardVisible == true
+          ? null
+          : KFab(
+              label: (widget.notificationId == null) ? 'CREATE' : 'UPDATE',
+              icon: Icons.notification_add_sharp,
+              onPressed: () {
+                bool? isValid = _formKey.currentState?.validate();
+                validateReceiverType();
+                validateNotificationGroupType();
+                if (isValid == true &&
+                    receiverTypeIsValid == true &&
+                    notificationGroupTypeIsValid == true) {
+                  if (widget.notificationId != null) {
+                    updateNotification(context);
+                  } else {
+                    createNotification(context);
+                  }
+                } else {
+                  kSnackBar(
+                    context: context,
+                    type: AlertType.failed,
+                    message: 'Please fill all the required fields',
+                  );
+                }
+              },
+            ),
     );
   }
 
@@ -415,6 +433,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
           bgColor: KColors.background,
           maxLines: 5,
           bottomPadding: 15.h,
+          textInputAction: TextInputAction.newline,
         ),
         KTextField(
           hintText: 'Image link (optional)',

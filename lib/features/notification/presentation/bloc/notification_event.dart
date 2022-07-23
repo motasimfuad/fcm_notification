@@ -62,3 +62,14 @@ class EditNotificationEvent extends NotificationEvent {
   @override
   List<Object> get props => [notification];
 }
+
+class SendNotificationEvent extends NotificationEvent {
+  final String serverKey;
+  final NotificationEntity notification;
+  const SendNotificationEvent({
+    required this.serverKey,
+    required this.notification,
+  });
+  @override
+  List<Object> get props => [notification];
+}

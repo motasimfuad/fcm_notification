@@ -1,26 +1,31 @@
-import 'package:fcm_notification/core/constants/enums.dart';
-import 'package:fcm_notification/core/router/app_router.dart';
-import 'package:fcm_notification/features/notification/presentation/widgets/notification_fab_menu.dart';
+import 'package:date_time_format/date_time_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sweetsheet/sweetsheet.dart';
 
 import 'package:fcm_notification/core/constants/colors.dart';
+import 'package:fcm_notification/core/constants/enums.dart';
+import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/core/widgets/k_image_container.dart';
-import 'package:sweetsheet/sweetsheet.dart';
+import 'package:fcm_notification/features/notification/presentation/widgets/notification_fab_menu.dart';
 
+import '../../../../core/constants/strings.dart';
 import '../../../../core/widgets/k_bottom_sheet.dart';
 import '../../domain/entities/notification_entity.dart';
 import '../bloc/notification_bloc.dart';
 import '../widgets/notification_detail_item.dart';
+import '../widgets/notification_type_info_widget.dart';
 
 class NotificationDetailPage extends StatefulWidget {
   final String id;
+  final String? serverKey;
   const NotificationDetailPage({
     Key? key,
     required this.id,
+    this.serverKey,
   }) : super(key: key);
 
   @override
@@ -32,6 +37,7 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
 
   @override
   void initState() {
+    print("widget.serverKey: ${widget.serverKey}");
     context.read<NotificationBloc>().add(GetNotificationEvent(id: widget.id));
     super.initState();
   }
@@ -59,7 +65,31 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
               },
             );
           },
-          onTapSend: () {},
+          onTapSend: () {
+            kBottomSheet(
+              context: context,
+              title: 'Send Notification?',
+              description: Strings.sendConfirmation,
+              descriptionFontSize: 15.5.sp,
+              color: CustomSheetColor(
+                main: KColors.primary,
+                accent: KColors.background,
+                icon: KColors.secondary,
+              ),
+              positiveActionColor: KColors.secondary,
+              positiveTitle: 'SEND NOTIFICATION',
+              // positiveIcon: Icons.local_fire_department_sharp,
+              positiveAction: () {
+                context.read<NotificationBloc>().add(
+                      SendNotificationEvent(
+                        serverKey: widget.serverKey!,
+                        notification: notification!,
+                      ),
+                    );
+                Navigator.pop(context);
+              },
+            );
+          },
           child: BlocConsumer<NotificationBloc, NotificationState>(
             listener: (context, state) {
               if (state is NotificationEditedState) {
@@ -74,9 +104,22 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
               }
 
               return SingleChildScrollView(
-                padding: EdgeInsets.all(10.w),
+                padding: EdgeInsets.only(
+                  left: 10.w,
+                  right: 10.w,
+                  bottom: 100.w,
+                ),
                 child: Column(
                   children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.w),
+                      child: NotificationTypeInfoWidget(
+                        title:
+                            'Last Sent: ${(notification?.lastSentAt != null) ? DateTimeFormat.format(notification!.lastSentAt!, format: DateTimeFormats.american) : "Never"}',
+                        // icon: Icons.send_time_extension,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
                     NotificationDetailItem(
                       label: 'Notification Name',
                       value: notification?.name,
