@@ -267,8 +267,10 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                                       return NotificationItem(
                                         key: GlobalKey(),
                                         notification: singleNotification,
-                                        isLoading:
-                                            (state is NotificationSendingState),
+                                        isLoading: (state
+                                                is NotificationSendingState) &&
+                                            state.notificationId ==
+                                                singleNotification.id,
                                         app: app,
                                       );
                                     }

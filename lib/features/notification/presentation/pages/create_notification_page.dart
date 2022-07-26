@@ -93,6 +93,12 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
     }
   }
 
+  changeKeyboardVisibility(bool isVisible) {
+    setState(() {
+      isKeyboardVisible = isVisible;
+    });
+  }
+
   @override
   void initState() {
     if (widget.notificationId != null) {
@@ -105,9 +111,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
 
     keyboardSubscription =
         keyboardVisibilityController.onChange.listen((bool visible) {
-      setState(() {
-        isKeyboardVisible = visible;
-      });
+      changeKeyboardVisibility(visible);
     });
     super.initState();
   }

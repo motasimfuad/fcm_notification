@@ -136,7 +136,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
       // send notification
       if (event is SendNotificationEvent) {
-        emit(NotificationSendingState());
+        emit(NotificationSendingState(notificationId: event.notification.id));
         final sent = await sendNotification(Params(
           notification: event.notification,
           serverKey: event.serverKey,
