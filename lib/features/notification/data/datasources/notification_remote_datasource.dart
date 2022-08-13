@@ -18,33 +18,14 @@ class NotificationRemoteDatasourceImpl implements NotificationRemoteDatasource {
     required String serverKey,
     required NotificationModel notification,
   }) async {
-    //* Send notification
-    if (notification.notificationType == NotificationType.notification) {
-      //* Send notification to All with topic
-      if (notification.receiverType == NotificationReceiverType.all) {
-        var response = await sendNotificationToAll(serverKey, notification);
-        return response;
-      } else {
-        //* Send notification to a single user with topic
-        var response =
-            await sendNotificationToSingleUser(serverKey, notification);
-        return response;
-      }
-
-      //* Send data-message
-    } else if (notification.notificationType == NotificationType.dataMessage) {
-      //* Send data-message to All with topic
-      if (notification.receiverType == NotificationReceiverType.all) {
-        var response = await sendDataMessageToAll(serverKey, notification);
-        return response;
-      } else {
-        //* Send data-message to a single user with topic
-        var response =
-            await sendDataMessageToSingleUser(serverKey, notification);
-        return response;
-      }
-    } else {
+    //* Send notification to All users with topic
+    if (notification.receiverType == NotificationReceiverType.all) {
       var response = await sendNotificationToAll(serverKey, notification);
+      return response;
+    } else {
+      //* Send notification to a single user with registration id
+      var response =
+          await sendNotificationToSingleUser(serverKey, notification);
       return response;
     }
   }
@@ -62,7 +43,10 @@ class NotificationRemoteDatasourceImpl implements NotificationRemoteDatasource {
           'title': notification.title,
           'body': notification.body,
           'image': notification.imageUrl,
-          "sound": "default",
+          'sound': 'default',
+          'data': {
+            '${notification.dataKey}': '${notification.dataValue}',
+          },
         },
       },
     );
@@ -81,37 +65,10 @@ class NotificationRemoteDatasourceImpl implements NotificationRemoteDatasource {
           'title': notification.title,
           'body': notification.body,
           'image': notification.imageUrl,
-          "sound": "default",
-        },
-      },
-    );
-  }
-
-  Future<dynamic> sendDataMessageToAll(
-    String serverKey,
-    NotificationModel notification,
-  ) async {
-    return await dioClient.postRequest(
-      serverKey: serverKey,
-      data: {
-        'to': '/topics/${notification.topicName}',
-        'data': {
-          '${notification.dataKey}': '${notification.dataValue}',
-        },
-      },
-    );
-  }
-
-  Future<dynamic> sendDataMessageToSingleUser(
-    String serverKey,
-    NotificationModel notification,
-  ) async {
-    return await dioClient.postRequest(
-      serverKey: serverKey,
-      data: {
-        'registration_ids': ['${notification.deviceId}'],
-        'data': {
-          '${notification.dataKey}': '${notification.dataValue}',
+          'sound': 'default',
+          'data': {
+            '${notification.dataKey}': '${notification.dataValue}',
+          },
         },
       },
     );
