@@ -114,7 +114,6 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                       child: NotificationTypeInfoWidget(
                         title:
                             'Last Sent: ${(notification?.lastSentAt != null) ? DateTimeFormat.format(notification!.lastSentAt!, format: DateTimeFormats.american) : "Never"}',
-                        // icon: Icons.send_time_extension,
                       ),
                     ),
                     SizedBox(height: 20.h),
@@ -131,10 +130,7 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                             label: 'Device ID',
                             value: notification?.deviceId,
                           ),
-                    (notification?.notificationType ==
-                            NotificationType.notification)
-                        ? buildNotificationFields()
-                        : buildDataMessageFields(),
+                    buildNotificationFields(),
                   ],
                 ),
               );
@@ -253,40 +249,40 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                     ],
                   )
                 : const SizedBox(),
+            (notification?.dataKey != null &&
+                    notification!.dataKey!.trim().isNotEmpty &&
+                    notification?.dataValue != null &&
+                    notification!.dataValue!.trim().isNotEmpty)
+                ? buildDataMessageFields()
+                : const SizedBox(),
           ],
         ),
       ),
     );
   }
 
-  KCard buildDataMessageFields() {
-    return KCard(
-      xPadding: 15.w,
-      yPadding: 0,
-      color: KColors.primary,
-      child: Padding(
-        padding: EdgeInsets.only(top: 20.w),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: NotificationDetailItem(
-                label: 'Key',
-                bgColor: KColors.background,
-                value: notification?.dataKey,
-              ),
-            ),
-            SizedBox(width: 10.w),
-            Expanded(
-              child: NotificationDetailItem(
-                label: 'Value',
-                bgColor: KColors.background,
-                value: notification?.dataValue,
-              ),
-            ),
-          ],
+  buildDataMessageFields() {
+    return Column(
+      children: [
+        SizedBox(
+          width: 50.w,
+          child: Divider(
+            color: KColors.background,
+            thickness: 2.w,
+            height: 20.w,
+          ),
         ),
-      ),
+        NotificationDetailItem(
+          label: 'Key',
+          bgColor: KColors.background,
+          value: notification?.dataKey,
+        ),
+        NotificationDetailItem(
+          label: 'Value',
+          bgColor: KColors.background,
+          value: notification?.dataValue,
+        ),
+      ],
     );
   }
 }

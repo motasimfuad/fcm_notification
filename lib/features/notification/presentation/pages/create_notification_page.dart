@@ -74,15 +74,8 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
   }
 
   validateNotificationGroupType() {
-    if ((_notificationGroupType == NotificationType.notification) &&
-        (_titleController.text.trim().isEmpty ||
-            _bodyController.text.trim().isEmpty)) {
-      setState(() {
-        notificationGroupTypeIsValid = false;
-      });
-    } else if ((_notificationGroupType == NotificationType.dataMessage) &&
-        (_dataKeyController.text.trim().isEmpty ||
-            _dataValueController.text.trim().isEmpty)) {
+    if (_titleController.text.trim().isEmpty ||
+        _bodyController.text.trim().isEmpty) {
       setState(() {
         notificationGroupTypeIsValid = false;
       });
@@ -114,6 +107,12 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
       changeKeyboardVisibility(visible);
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    keyboardSubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -162,6 +161,13 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
               notificationForEditing = state.notification;
 
               _nameController.text = notificationForEditing?.name ?? '';
+              _titleController.text = notificationForEditing!.title!;
+              _bodyController.text = notificationForEditing!.body!;
+              _dataKeyController.text = notificationForEditing!.dataKey!;
+              _dataValueController.text = notificationForEditing!.dataValue!;
+              if (notificationForEditing?.imageUrl != null) {
+                _imageLinkController.text = notificationForEditing!.imageUrl!;
+              }
 
               if (notificationForEditing?.receiverType ==
                   NotificationReceiverType.all) {
@@ -172,20 +178,6 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                 _notificationReceiverType = NotificationReceiverType.single;
                 _deviceIdController.text =
                     notificationForEditing?.deviceId ?? '';
-              }
-
-              if (notificationForEditing?.notificationType ==
-                  NotificationType.notification) {
-                _notificationGroupType = NotificationType.notification;
-                _titleController.text = notificationForEditing!.title!;
-                _bodyController.text = notificationForEditing!.body!;
-                if (notificationForEditing?.imageUrl != null) {
-                  _imageLinkController.text = notificationForEditing!.imageUrl!;
-                }
-              } else {
-                _notificationGroupType = NotificationType.dataMessage;
-                _dataKeyController.text = notificationForEditing!.dataKey!;
-                _dataValueController.text = notificationForEditing!.dataValue!;
               }
             }
           }
@@ -207,7 +199,6 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                   KTextField(
                     hintText: 'Notification Name *',
                     controller: _nameController,
-                    // autofocus: true,
                     validator: (value) {
                       if (value!.trim().isEmpty) {
                         return 'Notification name is required!';
@@ -218,7 +209,6 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                   KCard(
                     color: KColors.primary,
                     xPadding: 15.w,
-                    // yPadding: 20.h,
                     hasBorder: receiverTypeIsValid == true ? false : true,
                     borderColor: Colors.red,
                     borderWidth: 1.w,
@@ -295,34 +285,10 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                               _notificationGroupType =
                                   value as NotificationType;
                             });
-                            if (widget.notificationId == null) {
-                              _dataKeyController.clear();
-                              _dataValueController.clear();
-                            }
-                          },
-                        ),
-                        KRadioTile(
-                          value: NotificationType.dataMessage,
-                          groupValue: _notificationGroupType,
-                          title: 'Data Message',
-                          subtitle: 'Send data message',
-                          icon: Icons.message_rounded,
-                          onChanged: (value) {
-                            setState(() {
-                              _notificationGroupType =
-                                  value as NotificationType;
-                            });
-                            if (widget.notificationId == null) {
-                              _titleController.clear();
-                              _bodyController.clear();
-                              _imageLinkController.clear();
-                            }
                           },
                         ),
                         SizedBox(height: 15.h),
-                        _notificationGroupType == NotificationType.notification
-                            ? buildNotificationFields()
-                            : buildDataMessageFields(),
+                        buildNotificationFields(),
                       ],
                     ),
                   ),
@@ -391,14 +357,6 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
     } else {
       _topicNameController.clear();
     }
-    if (_notificationGroupType == NotificationType.notification) {
-      _dataKeyController.clear();
-      _dataValueController.clear();
-    } else {
-      _titleController.clear();
-      _bodyController.clear();
-      _imageLinkController.clear();
-    }
 
     NotificationEntity notificationUpdateEntity = NotificationEntity(
       appId: notificationForEditing!.appId,
@@ -443,8 +401,17 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
           hintText: 'Image link (optional)',
           controller: _imageLinkController,
           bgColor: KColors.background,
-          bottomPadding: 10.h,
+          bottomPadding: 25.h,
         ),
+        Text(
+          'Data Message (optional)',
+          style: TextStyle(
+            color: KColors.primary.shade300,
+            fontSize: 12.sp,
+          ),
+        ),
+        SizedBox(height: 12.h),
+        buildDataMessageFields(),
       ],
     );
   }
@@ -454,7 +421,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
       children: [
         Expanded(
           child: KTextField(
-            hintText: 'Key *',
+            hintText: 'Key',
             controller: _dataKeyController,
             bgColor: KColors.background,
             bottomPadding: 5.h,
@@ -470,7 +437,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
         ),
         Expanded(
           child: KTextField(
-            hintText: 'Value *',
+            hintText: 'Value',
             controller: _dataValueController,
             bottomPadding: 5.h,
             bgColor: KColors.background,
