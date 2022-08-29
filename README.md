@@ -25,12 +25,11 @@
 ## Features
 - Add your firebase apps easily
 - Create and send Notifications
-- Create and send Data messages
 - Send notifications to a specific user
-- Use topic to send notifications to all the users
+- Use topics to send notifications to all the users
 - Manage everything in offline mode
-- All of the datas are fully secure
-- Easily duplicate and edit notificatons
+- All of the data are fully secure
+- Easily duplicate and edit notifications
 - Fully dark mode with beautiful UI
 
 </br>
