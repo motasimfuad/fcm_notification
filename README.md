@@ -58,8 +58,8 @@
 </br>
 
 <p align="center">
-  <a href="https://rebrand.ly/FCM_Notification-download">
-  <img width="180" src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fee4cde11-e7d3-459c-ba63-b0ddb81c8eb7%2FScreenshot_112.png?id=54440bd0-85f6-4401-9fbf-566dc9619563&table=block&spaceId=3107c0c8-1d6e-462e-8ab2-26ba76caa796&width=2000&userId=73918c78-f0a6-467b-83c8-c747d80076b1&cache=v2">
+  <a href="https://rebrand.ly/fcm-notification">
+  <img width="180" src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F53562920-4f3f-4acf-ad1b-e3394b5cdacb%2FPlay_Store_badge.png?table=block&id=d0582e37-3734-44d4-8c4e-8f047733bd0c&spaceId=3107c0c8-1d6e-462e-8ab2-26ba76caa796&width=2000&userId=73918c78-f0a6-467b-83c8-c747d80076b1&cache=v2">
   </a>
 </p>
 
