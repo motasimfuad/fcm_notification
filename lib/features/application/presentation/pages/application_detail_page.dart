@@ -1,15 +1,14 @@
+import 'package:fcm_notification/core/constants/colors.dart';
+import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
+import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
+import 'package:fcm_notification/features/application/presentation/bloc/application_bloc.dart';
+import 'package:fcm_notification/features/application/presentation/widgets/app_list_item.dart';
 import 'package:fcm_notification/features/notification/presentation/widgets/notification_detail_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:fcm_notification/core/constants/colors.dart';
-import 'package:fcm_notification/core/router/app_router.dart';
-import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
-import 'package:fcm_notification/features/application/presentation/bloc/application_bloc.dart';
-import 'package:fcm_notification/features/application/presentation/widgets/app_list_item.dart';
 
 import '../../../../core/widgets/k_appbar.dart';
 import '../../../../core/widgets/k_fab.dart';
@@ -18,8 +17,8 @@ import '../../../../core/widgets/k_snack_bar.dart';
 import '../../../notification/domain/entities/notification_entity.dart';
 import '../../../notification/presentation/bloc/notification_bloc.dart';
 import '../../../notification/presentation/widgets/notification_item.dart';
-import '../widgets/empty_notifications_widget.dart';
 import '../widgets/app_details_toggle_icon.dart';
+import '../widgets/empty_notifications_widget.dart';
 
 class ApplicationDetailPage extends StatefulWidget {
   final String? appId;
@@ -201,7 +200,9 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                         kSnackBar(
                           context: context,
                           type: AlertType.failed,
-                          message: 'Sending Notification Failed!',
+                          message:
+                              'Sending Notification Failed!\nPlease make sure you are using the right server key / topic name / device token.',
+                          durationSeconds: 6,
                         );
                       }
                       if (state is NotificationSentState) {
