@@ -34,11 +34,10 @@ kSnackBar({
         controller: controller,
         position: position ?? FlashPosition.top,
         forwardAnimationCurve: Curves.easeInOutCubic,
-        reverseAnimationCurve: Curves.easeOutQuint,
+        reverseAnimationCurve: Curves.easeOut,
         dismissDirections: isDismissible == true
             ? const [
                 FlashDismissDirection.startToEnd,
-                FlashDismissDirection.endToStart,
               ]
             : [],
         child: FlashBar(
@@ -47,9 +46,15 @@ kSnackBar({
           margin: EdgeInsets.all(20.h),
           behavior: FlashBehavior.floating,
           backgroundColor: generateBgColor(type),
+          clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.r),
           ),
+          dismissDirections: isDismissible == true
+              ? const [
+                  FlashDismissDirection.startToEnd,
+                ]
+              : [],
           showProgressIndicator: showProgress == true ? true : false,
           content: Text(
             message ?? generateText(type),
@@ -144,7 +149,7 @@ Color? generateIndicatorColor(AlertType type) {
     case AlertType.success:
       return Colors.green.shade900;
     case AlertType.failed:
-      return KColors.primary;
+      return Colors.white;
     case AlertType.warning:
       return Colors.orange.shade800;
     case AlertType.info:
