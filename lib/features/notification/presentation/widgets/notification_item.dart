@@ -1,12 +1,11 @@
 import 'package:date_time_format/date_time_format.dart';
 import 'package:fcm_notification/core/constants/strings.dart';
+import 'package:fcm_notification/core/router/app_router.dart';
+import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sweetsheet/sweetsheet.dart';
-
-import 'package:fcm_notification/core/router/app_router.dart';
-import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/constants/enums.dart';
@@ -140,7 +139,7 @@ class NotificationItem extends StatelessWidget {
                         onPressed: () {
                           router.pushNamed(
                             AppRouter.editNotificationPage,
-                            params: {
+                            pathParameters: {
                               'appId': notification.appId,
                               'notificationId': notification.id,
                             },
@@ -174,7 +173,7 @@ class NotificationItem extends StatelessWidget {
                         onPressed: () {
                           router.pushNamed(
                             AppRouter.notificationDetailPage,
-                            params: {
+                            pathParameters: {
                               'notificationId': notification.id,
                             },
                             extra: app!.serverKey,

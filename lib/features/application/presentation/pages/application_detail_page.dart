@@ -63,7 +63,7 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
         onPressed: () {
           router.pushNamed(
             AppRouter.createNotificationPage,
-            params: {'appId': app!.id},
+            pathParameters: {'appId': app!.id},
           );
         },
       ),

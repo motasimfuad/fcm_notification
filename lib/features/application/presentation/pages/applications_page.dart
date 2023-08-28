@@ -97,7 +97,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                                   onTap: () {
                                     router.pushNamed(
                                       AppRouter.applicationDetailPage,
-                                      params: {'id': app.id},
+                                      pathParameters: {'id': app.id},
                                     );
                                   },
                                   onDeleteTap: () {
@@ -122,7 +122,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                                   onEditTap: () {
                                     router.pushNamed(
                                       AppRouter.applicationEditPage,
-                                      params: {'id': app.id},
+                                      pathParameters: {'id': app.id},
                                     );
                                   },
                                 );
