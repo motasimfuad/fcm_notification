@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.fcm_notification">
+    package="com.infaqlab.fcmnotification">
    <application
         android:label="FCM Notification"
         android:name="${applicationName}"
