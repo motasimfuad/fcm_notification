@@ -1,9 +1,4 @@
 import 'package:date_time_format/date_time_format.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sweetsheet/sweetsheet.dart';
-
 import 'package:fcm_notification/core/constants/colors.dart';
 import 'package:fcm_notification/core/constants/enums.dart';
 import 'package:fcm_notification/core/router/app_router.dart';
@@ -11,6 +6,10 @@ import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/core/widgets/k_image_container.dart';
 import 'package:fcm_notification/features/notification/presentation/widgets/notification_fab_menu.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sweetsheet/sweetsheet.dart';
 
 import '../../../../core/constants/strings.dart';
 import '../../../../core/widgets/k_bottom_sheet.dart';
@@ -58,7 +57,7 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
           onTapEdit: () {
             router.pushNamed(
               AppRouter.editNotificationPage,
-              params: {
+              pathParameters: {
                 'appId': notification!.appId,
                 'notificationId': notification!.id,
               },

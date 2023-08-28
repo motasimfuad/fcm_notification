@@ -17,7 +17,6 @@ class AppRouter {
 }
 
 final router = GoRouter(
-  urlPathStrategy: UrlPathStrategy.path,
   initialLocation: AppRouter.homePage,
   routes: [
     GoRoute(
@@ -48,7 +47,7 @@ final router = GoRouter(
       name: AppRouter.applicationEditPage,
       path: '/${AppRouter.applicationEditPage}/:id',
       pageBuilder: (context, state) {
-        final id = state.params['id'];
+        final id = state.pathParameters['id'];
         return MaterialPage(
           key: state.pageKey,
           child: AddAppPage(id: id),
@@ -61,7 +60,7 @@ final router = GoRouter(
       name: AppRouter.applicationDetailPage,
       path: '/${AppRouter.applicationDetailPage}:id',
       pageBuilder: (context, state) {
-        final id = state.params['id'];
+        final id = state.pathParameters['id'];
 
         return MaterialPage(
           key: state.pageKey,
@@ -77,7 +76,7 @@ final router = GoRouter(
       name: AppRouter.notificationDetailPage,
       path: '/${AppRouter.notificationDetailPage}:notificationId',
       pageBuilder: (context, state) {
-        final notificationId = state.params['notificationId'];
+        final notificationId = state.pathParameters['notificationId'];
 
         return MaterialPage(
           key: state.pageKey,
@@ -94,8 +93,8 @@ final router = GoRouter(
       name: AppRouter.editNotificationPage,
       path: '/:appId/${AppRouter.editNotificationPage}:notificationId',
       pageBuilder: (context, state) {
-        final appId = state.params['appId'];
-        final notificationId = state.params['notificationId'];
+        final appId = state.pathParameters['appId'];
+        final notificationId = state.pathParameters['notificationId'];
 
         return MaterialPage(
           key: state.pageKey,
@@ -112,7 +111,7 @@ final router = GoRouter(
       name: AppRouter.createNotificationPage,
       path: '/:appId/${AppRouter.createNotificationPage}',
       pageBuilder: (context, state) {
-        final appId = state.params['appId'];
+        final appId = state.pathParameters['appId'];
 
         return MaterialPage(
           key: state.pageKey,

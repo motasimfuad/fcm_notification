@@ -1,4 +1,4 @@
-package com.example.fcm_notification
+package com.infaqlab.fcmnotification
 
 import io.flutter.embedding.android.FlutterActivity
 
