@@ -2,6 +2,7 @@ import 'package:fcm_notification/core/constants/colors.dart';
 import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/core/widgets/k_fab.dart';
+import 'package:fcm_notification/core/widgets/k_icon_button.dart';
 import 'package:fcm_notification/core/widgets/k_refresher.dart';
 import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 import 'package:fcm_notification/features/application/presentation/bloc/application_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../../core/widgets/k_bottom_sheet.dart';
 import '../../../notification/presentation/bloc/notification_bloc.dart';
@@ -22,12 +24,19 @@ class ApplicationsPage extends StatefulWidget {
 }
 
 class _ApplicationsPageState extends State<ApplicationsPage> {
+  PackageInfo? packageInfo;
   List<AppEntity> allApps = [];
 
   @override
   void initState() {
     context.read<ApplicationBloc>().add(GetAllAppsEvent());
+    fetchAppInformation();
     super.initState();
+  }
+
+  void fetchAppInformation() async {
+    packageInfo = await PackageInfo.fromPlatform();
+    setState(() {});
   }
 
   @override
@@ -136,12 +145,56 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
           ),
         ),
       ),
-      floatingActionButton: KFab(
-        label: 'NEW APP',
-        icon: Icons.add_to_photos_rounded,
-        onPressed: () {
-          router.pushNamed(AppRouter.addApplicationPage);
-        },
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(left: 40.w),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            KIconButton(
+              icon: Icons.info_outline_rounded,
+              iconColor: KColors.info,
+              onPressed: () async => await settingsBottomSheet(context),
+              size: 22.w,
+            ),
+            KFab(
+              label: 'NEW APP',
+              icon: Icons.add_to_photos_rounded,
+              onPressed: () {
+                router.pushNamed(AppRouter.addApplicationPage);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> settingsBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) => SizedBox(
+        height: 200.h,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'FCM Notification',
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            if (packageInfo != null)
+              Padding(
+                padding: EdgeInsets.only(top: 10.h),
+                child: Text(
+                  "Version:\n${packageInfo!.version}+${packageInfo!.buildNumber}",
+                  textAlign: TextAlign.center,
+                ),
+              )
+          ],
+        ),
       ),
     );
   }
