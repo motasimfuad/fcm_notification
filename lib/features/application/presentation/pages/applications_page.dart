@@ -173,26 +173,33 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
   Future<dynamic> settingsBottomSheet(BuildContext context) {
     return showModalBottomSheet(
       context: context,
+      backgroundColor: KColors.background,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.w),
+          topRight: Radius.circular(20.w),
+        ),
+      ),
       builder: (context) => SizedBox(
         height: 200.h,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'FCM Notification',
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
-              ),
+            Image.asset(
+              'assets/logo-horizontal.png',
+              height: 30.w,
             ),
             if (packageInfo != null)
               Padding(
-                padding: EdgeInsets.only(top: 10.h),
+                padding: EdgeInsets.only(top: 50.h),
                 child: Text(
-                  "Version:\n${packageInfo!.version}+${packageInfo!.buildNumber}",
+                  "${packageInfo!.version}+${packageInfo!.buildNumber}",
                   textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: KColors.warning,
+                  ),
                 ),
-              )
+              ),
           ],
         ),
       ),
