@@ -182,6 +182,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
       ),
       builder: (context) => SizedBox(
         height: 200.h,
+        width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
