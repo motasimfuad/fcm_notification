@@ -1,4 +1,4 @@
-import 'package:fcm_notification/core/constants/colors.dart';
+import 'package:fcm_notification/core/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class KRadioTile extends StatelessWidget {
@@ -27,15 +27,21 @@ class KRadioTile extends StatelessWidget {
       contentPadding: const EdgeInsets.all(0),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.amber,
+          fontWeight: FontWeight.w600,
+          fontSize: 14.sp,
         ),
       ),
       subtitle: subtitle != null
-          ? Text(
-              subtitle ?? '',
-              style: const TextStyle(
-                color: KColors.grey,
+          ? Padding(
+              padding: EdgeInsets.only(top: 3.5.h),
+              child: Text(
+                subtitle ?? '',
+                style: TextStyle(
+                  fontSize: 12.5.sp,
+                  color: KColors.grey,
+                ),
               ),
             )
           : null,
