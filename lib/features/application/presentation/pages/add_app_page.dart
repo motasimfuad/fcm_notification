@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uuid/uuid.dart';
-
-import 'package:fcm_notification/core/constants/colors.dart';
+import 'package:fcm_notification/core/constants/constants.dart';
 import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/core/widgets/k_image_container.dart';
+import 'package:fcm_notification/core/widgets/k_radio_tile.dart';
 import 'package:fcm_notification/core/widgets/k_snack_bar.dart';
 import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 import 'package:fcm_notification/features/application/presentation/bloc/application_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../core/router/app_router.dart';
 import '../../../../core/widgets/k_fab.dart';
@@ -28,11 +27,11 @@ class AddAppPage extends StatefulWidget {
 
 class _AddAppPageState extends State<AddAppPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  FcmApiType fcmApiType = FcmApiType.v1;
 
   String? _iconName;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _serverKeyController = TextEditingController();
-
   AppEntity? _stateApp;
 
   bool? hasImage = true;
@@ -43,6 +42,16 @@ class _AddAppPageState extends State<AddAppPage> {
       context.read<ApplicationBloc>().add(GetAppEvent(widget.id!));
     }
     super.initState();
+  }
+
+  void _changeApiType(FcmApiType type) {
+    if (widget.id != null) return;
+    //TODO: Show feedback
+
+    setState(() {
+      fcmApiType = type;
+      _serverKeyController.clear();
+    });
   }
 
   @override
@@ -135,17 +144,48 @@ class _AddAppPageState extends State<AddAppPage> {
                         return null;
                       },
                     ),
-                    KTextField(
-                      controller: _serverKeyController,
-                      hintText: 'Server Key *',
-                      maxLines: 7,
-                      textInputAction: TextInputAction.send,
-                      validator: (value) {
-                        if (_serverKeyController.text.trim().isEmpty) {
-                          return 'Server Key is required';
-                        }
-                        return null;
-                      },
+                    KCard(
+                      color: KColors.primary,
+                      xPadding: 15.w,
+                      borderColor: Colors.red,
+                      borderWidth: 1.w,
+                      child: Column(
+                        children: [
+                          KRadioTile(
+                            value: FcmApiType.v1,
+                            groupValue: fcmApiType,
+                            title: 'V1 API',
+                            subtitle: 'Firebase Cloud Messaging API (V1)',
+                            icon: Icons.security_outlined,
+                            onChanged: <FcmApiType>(val) => _changeApiType(val),
+                          ),
+                          KRadioTile(
+                            value: FcmApiType.legacy,
+                            groupValue: fcmApiType,
+                            title: 'Legacy API (Deprecated)',
+                            subtitle: 'Cloud Messaging API (Legacy)',
+                            icon: Icons.shield_moon_rounded,
+                            onChanged: <FcmApiType>(val) => _changeApiType(val),
+                          ),
+                          SizedBox(height: 15.h),
+                          KTextField(
+                            bottomPadding: 5.h,
+                            controller: _serverKeyController,
+                            bgColor: KColors.background,
+                            hintText: fcmApiType == FcmApiType.v1
+                                ? 'JSON private key (Service Account) *'
+                                : 'Server Key *',
+                            maxLines: 9,
+                            textInputAction: TextInputAction.send,
+                            validator: (value) {
+                              if (_serverKeyController.text.trim().isEmpty) {
+                                return 'Key is required';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -164,6 +204,7 @@ class _AddAppPageState extends State<AddAppPage> {
           });
           if (isValid && hasImage == true) {
             if (widget.id != null) {
+              //TODO: Handle updating app
               // update app
               AppEntity updateAppEntity = AppEntity(
                 id: _stateApp!.id,
@@ -184,6 +225,7 @@ class _AddAppPageState extends State<AddAppPage> {
                 serverKey: _serverKeyController.text,
                 iconName: _iconName,
                 createdAt: DateTime.now(),
+                apiType: fcmApiType,
               );
               context
                   .read<ApplicationBloc>()

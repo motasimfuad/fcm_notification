@@ -106,6 +106,7 @@ Future<void> init() async {
   Hive.registerAdapter(NotificationModelAdapter());
   Hive.registerAdapter(NotificationReceiverTypeAdapter());
   Hive.registerAdapter(NotificationTypeAdapter());
+  Hive.registerAdapter(FcmApiTypeAdapter());
 
   // app box
   var appBox = await Hive.openBox<AppModel>(Strings.appBox);
