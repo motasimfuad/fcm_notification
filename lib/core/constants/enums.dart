@@ -17,3 +17,11 @@ enum NotificationType {
   @HiveField(1)
   dataMessage,
 }
+
+@HiveType(typeId: 5)
+enum FcmApiType {
+  @HiveField(0, defaultValue: true)
+  legacy,
+  @HiveField(1)
+  v1,
+}
