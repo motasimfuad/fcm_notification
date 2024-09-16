@@ -27,6 +27,7 @@ class AddAppPage extends StatefulWidget {
 
 class _AddAppPageState extends State<AddAppPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isUpdating = false;
   FcmApiType fcmApiType = FcmApiType.v1;
 
   String? _iconName;
@@ -38,6 +39,8 @@ class _AddAppPageState extends State<AddAppPage> {
 
   @override
   void initState() {
+    isUpdating = widget.id != null;
+
     if (widget.id != null) {
       context.read<ApplicationBloc>().add(GetAppEvent(widget.id!));
     }
@@ -45,21 +48,22 @@ class _AddAppPageState extends State<AddAppPage> {
   }
 
   void _changeApiType(FcmApiType type) {
-    if (widget.id != null) return;
-    //TODO: Show feedback
-
-    setState(() {
+    if (isUpdating) {
       fcmApiType = type;
-      _serverKeyController.clear();
-    });
+    } else {
+      setState(() {
+        fcmApiType = type;
+        _serverKeyController.clear();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KColors.background,
-      appBar: KAppbar(
-          title: (widget.id != null) ? "Edit Application" : 'New Application'),
+      appBar:
+          KAppbar(title: (isUpdating) ? "Edit Application" : 'New Application'),
       body: Container(
         padding: EdgeInsets.all(20.w),
         child: SingleChildScrollView(
@@ -87,13 +91,14 @@ class _AddAppPageState extends State<AddAppPage> {
               }
             },
             builder: (context, state) {
-              if (widget.id != null) {
+              if (isUpdating) {
                 if (state is AppLoaded) {
                   _stateApp = state.app;
 
                   _nameController.text = _stateApp?.name ?? '';
                   _serverKeyController.text = _stateApp?.serverKey ?? '';
                   _iconName = _stateApp?.iconName;
+                  _changeApiType(_stateApp!.apiType);
                 }
               }
               if (state is AppIconAddedState) {
@@ -151,30 +156,36 @@ class _AddAppPageState extends State<AddAppPage> {
                       borderWidth: 1.w,
                       child: Column(
                         children: [
-                          KRadioTile(
-                            value: FcmApiType.v1,
-                            groupValue: fcmApiType,
-                            title: 'V1 API',
-                            subtitle: 'Firebase Cloud Messaging API (V1)',
-                            icon: Icons.security_outlined,
-                            onChanged: <FcmApiType>(val) => _changeApiType(val),
-                          ),
-                          KRadioTile(
-                            value: FcmApiType.legacy,
-                            groupValue: fcmApiType,
-                            title: 'Legacy API (Deprecated)',
-                            subtitle: 'Cloud Messaging API (Legacy)',
-                            icon: Icons.shield_moon_rounded,
-                            onChanged: <FcmApiType>(val) => _changeApiType(val),
-                          ),
+                          if (!isUpdating ||
+                              (isUpdating && fcmApiType == FcmApiType.v1))
+                            KRadioTile(
+                              value: FcmApiType.v1,
+                              groupValue: fcmApiType,
+                              title: 'V1 API',
+                              subtitle: 'Firebase Cloud Messaging API (V1)',
+                              icon: Icons.security_outlined,
+                              onChanged: <FcmApiType>(val) =>
+                                  _changeApiType(val),
+                            ),
+                          if (!isUpdating ||
+                              (isUpdating && fcmApiType == FcmApiType.legacy))
+                            KRadioTile(
+                              value: FcmApiType.legacy,
+                              groupValue: fcmApiType,
+                              title: 'Legacy API (Deprecated)',
+                              subtitle: 'Cloud Messaging API (Legacy)',
+                              icon: Icons.shield_moon_rounded,
+                              onChanged: <FcmApiType>(val) =>
+                                  _changeApiType(val),
+                            ),
                           SizedBox(height: 15.h),
                           KTextField(
                             bottomPadding: 5.h,
                             controller: _serverKeyController,
                             bgColor: KColors.background,
                             hintText: fcmApiType == FcmApiType.v1
-                                ? 'JSON private key (Service Account) *'
-                                : 'Server Key *',
+                                ? Strings.fcmTypeV1Hint
+                                : Strings.fcmTypeLegacyHint,
                             maxLines: 9,
                             textInputAction: TextInputAction.send,
                             validator: (value) {
@@ -188,9 +199,36 @@ class _AddAppPageState extends State<AddAppPage> {
                               return null;
                             },
                           ),
+                          if (!isUpdating)
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10.h),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: "You",
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w400,
+                                    color: KColors.primaryLight,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                  children: const <TextSpan>[
+                                    TextSpan(
+                                      text: " can't change ",
+                                      style: TextStyle(
+                                        fontSize: 12.5,
+                                        fontWeight: FontWeight.w500,
+                                        color: KColors.danger,
+                                      ),
+                                    ),
+                                    TextSpan(text: 'the API type later.'),
+                                  ],
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),
+                    SizedBox(height: 50.h),
                   ],
                 ),
               );
@@ -207,8 +245,7 @@ class _AddAppPageState extends State<AddAppPage> {
             hasImage = (_iconName == null) ? false : true;
           });
           if (isValid && hasImage == true) {
-            if (widget.id != null) {
-              //TODO: Handle updating app
+            if (isUpdating) {
               // update app
               AppEntity updateAppEntity = AppEntity(
                 id: _stateApp!.id,
@@ -217,6 +254,7 @@ class _AddAppPageState extends State<AddAppPage> {
                 iconName: _iconName,
                 createdAt: _stateApp!.createdAt,
                 notifications: _stateApp!.notifications,
+                apiType: _stateApp?.apiType ?? FcmApiType.legacy,
               );
               context
                   .read<ApplicationBloc>()

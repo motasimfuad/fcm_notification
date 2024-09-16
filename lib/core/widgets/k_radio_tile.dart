@@ -28,7 +28,7 @@ class KRadioTile extends StatelessWidget {
       title: Text(
         title,
         style: TextStyle(
-          color: Colors.amber,
+          color: KColors.secondary,
           fontWeight: FontWeight.w600,
           fontSize: 14.sp,
         ),
@@ -50,7 +50,7 @@ class KRadioTile extends StatelessWidget {
         color: KColors.secondary,
       ),
       dense: true,
-      activeColor: Colors.amber,
+      activeColor: KColors.secondary,
       enableFeedback: true,
       visualDensity: VisualDensity.compact,
       onChanged: onChanged,

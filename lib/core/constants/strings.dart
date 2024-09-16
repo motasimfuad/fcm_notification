@@ -12,4 +12,21 @@ Please make sure you have set up the push notification settings properly before 
 ✨ Check Device id.
 
 Active internet connection is required!''';
+
+  /// Hint texts
+  static const String fcmTypeV1Hint = """
+JSON private key (Service Account) *
+
+
+Generate and copy the entire JSON key -
+
+https://console.firebase.google.com/project/_/settings/serviceaccounts/adminsdk""";
+
+  static const String fcmTypeLegacyHint = """
+Server Key *
+
+
+You can get it from -
+
+https://console.firebase.google.com/project/_/settings/cloudmessaging""";
 }
