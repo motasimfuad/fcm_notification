@@ -1,4 +1,5 @@
 import 'package:fcm_notification/core/constants/colors.dart';
+import 'package:fcm_notification/core/constants/extensions.dart';
 import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
@@ -147,7 +148,8 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                               value: app?.name,
                             ),
                             NotificationDetailItem(
-                              label: 'Server Key',
+                              label:
+                                  'Server Key - ${app?.apiType.name.capitalized() ?? 'Legacy'}',
                               value: app?.serverKey,
                               hasBottomMargin: false,
                             ),
