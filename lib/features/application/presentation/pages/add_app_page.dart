@@ -181,6 +181,10 @@ class _AddAppPageState extends State<AddAppPage> {
                               if (_serverKeyController.text.trim().isEmpty) {
                                 return 'Key is required';
                               }
+                              if (fcmApiType == FcmApiType.v1 &&
+                                  !_serverKeyController.text.trim().isJson) {
+                                return 'Please add a valid JSON service account key';
+                              }
                               return null;
                             },
                           ),
