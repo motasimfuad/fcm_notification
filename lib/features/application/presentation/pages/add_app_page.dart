@@ -54,6 +54,7 @@ class _AddAppPageState extends State<AddAppPage> {
         _serverKeyController.clear();
       }
     });
+    context.read<ApplicationBloc>().add(RefreshUIEvent());
   }
 
   @override
@@ -89,6 +90,7 @@ class _AddAppPageState extends State<AddAppPage> {
               }
             },
             builder: (context, state) {
+              if (state is RefreshUIState) {}
               if (isUpdating) {
                 if (state is AppLoaded) {
                   _stateApp = state.app;
@@ -197,31 +199,50 @@ class _AddAppPageState extends State<AddAppPage> {
                               return null;
                             },
                           ),
-                          if (!isUpdating)
+                          if (fcmApiType == FcmApiType.legacy)
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 10.h),
-                              child: RichText(
-                                text: TextSpan(
-                                  text: "You",
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w400,
-                                    color: KColors.primaryLight,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                  children: const <TextSpan>[
-                                    TextSpan(
-                                      text: " can't change ",
-                                      style: TextStyle(
-                                        fontSize: 12.5,
-                                        fontWeight: FontWeight.w500,
-                                        color: KColors.danger,
+                              child: isUpdating
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        _changeApiType(FcmApiType.v1);
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.move_up_rounded,
+                                            size: 16.w,
+                                            color: KColors.info,
+                                          ),
+                                          SizedBox(width: 5.w),
+                                          const Text(
+                                            'Upgrade to V1 API',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: KColors.info,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : RichText(
+                                      text: const TextSpan(
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text: "Legacy API is deprecated",
+                                            style: TextStyle(
+                                              fontStyle: FontStyle.italic,
+                                              fontSize: 12.5,
+                                              fontWeight: FontWeight.w500,
+                                              color: KColors.danger,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    TextSpan(text: 'the API type later.'),
-                                  ],
-                                ),
-                              ),
                             ),
                         ],
                       ),
@@ -271,12 +292,6 @@ class _AddAppPageState extends State<AddAppPage> {
                   .read<ApplicationBloc>()
                   .add(CreateAppEvent(createAppEntity));
             }
-          } else {
-            kSnackBar(
-              context: context,
-              message: 'Please fill all the required fields!',
-              type: AlertType.failed,
-            );
           }
         },
       ),

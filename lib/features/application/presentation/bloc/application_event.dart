@@ -38,3 +38,5 @@ class UpdateAppEvent extends ApplicationEvent {
   @override
   List<Object> get props => [appEntity];
 }
+
+class RefreshUIEvent extends ApplicationEvent {}

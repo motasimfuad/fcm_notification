@@ -88,3 +88,5 @@ class AppUpdatingFailed extends ApplicationState {
   @override
   List<Object> get props => [message];
 }
+
+class RefreshUIState extends ApplicationState {}
