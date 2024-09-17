@@ -48,14 +48,12 @@ class _AddAppPageState extends State<AddAppPage> {
   }
 
   void _changeApiType(FcmApiType type) {
-    if (isUpdating) {
+    setState(() {
       fcmApiType = type;
-    } else {
-      setState(() {
-        fcmApiType = type;
+      if (!isUpdating) {
         _serverKeyController.clear();
-      });
-    }
+      }
+    });
   }
 
   @override
@@ -98,7 +96,7 @@ class _AddAppPageState extends State<AddAppPage> {
                   _nameController.text = _stateApp?.name ?? '';
                   _serverKeyController.text = _stateApp?.serverKey ?? '';
                   _iconName = _stateApp?.iconName;
-                  _changeApiType(_stateApp!.apiType);
+                  fcmApiType = _stateApp?.apiType ?? FcmApiType.legacy;
                 }
               }
               if (state is AppIconAddedState) {
@@ -237,7 +235,7 @@ class _AddAppPageState extends State<AddAppPage> {
         ),
       ),
       floatingActionButton: KFab(
-        label: (widget.id != null) ? 'UPDATE' : 'SAVE',
+        label: (isUpdating) ? 'UPDATE' : 'SAVE',
         icon: Icons.data_saver_on_rounded,
         onPressed: () async {
           var isValid = _formKey.currentState!.validate();
@@ -254,7 +252,7 @@ class _AddAppPageState extends State<AddAppPage> {
                 iconName: _iconName,
                 createdAt: _stateApp!.createdAt,
                 notifications: _stateApp!.notifications,
-                apiType: _stateApp?.apiType ?? FcmApiType.legacy,
+                apiType: fcmApiType,
               );
               context
                   .read<ApplicationBloc>()

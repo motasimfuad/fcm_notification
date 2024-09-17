@@ -18,11 +18,11 @@ class AppEntity extends Equatable {
     this.iconName,
     this.notifications,
     required this.createdAt,
-    this.apiType = FcmApiType.legacy,
+    required this.apiType,
   });
 
   @override
-  List<Object> get props => [id, name, serverKey, createdAt, apiType];
+  List<Object> get props => [id, name, serverKey, createdAt];
 
   @override
   String toString() {

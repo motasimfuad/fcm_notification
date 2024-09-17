@@ -20,7 +20,7 @@ enum NotificationType {
 
 @HiveType(typeId: 5)
 enum FcmApiType {
-  @HiveField(0, defaultValue: true)
+  @HiveField(0)
   legacy,
   @HiveField(1)
   v1,

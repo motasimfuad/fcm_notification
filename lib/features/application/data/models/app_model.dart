@@ -33,15 +33,16 @@ class AppModel extends AppEntity {
     this.iconName,
     this.notifications,
     required this.createdAt,
-    this.apiType = FcmApiType.legacy,
-  }) : super(
+    FcmApiType? apiType,
+  })  : apiType = apiType ?? FcmApiType.legacy,
+        super(
           id: id,
           name: name,
           serverKey: serverKey,
           iconName: iconName,
           notifications: notifications,
           createdAt: createdAt,
-          apiType: apiType,
+          apiType: apiType ?? FcmApiType.legacy,
         );
 
   AppModel copyWith({
@@ -76,7 +77,7 @@ class AppModel extends AppEntity {
               .toList()
           : null,
       'createdAt': createdAt.millisecondsSinceEpoch,
-      'apiType': apiType ?? FcmApiType.legacy,
+      'apiType': apiType.index,
     };
   }
 
@@ -89,9 +90,9 @@ class AppModel extends AppEntity {
       notifications: List<NotificationModel>.from(
           map['notifications']?.map((x) => NotificationModel.fromMap(x))),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
-      apiType: map['apiType'] == null
-          ? FcmApiType.legacy
-          : map['apiType'] ?? FcmApiType.legacy,
+      apiType: map['apiType'] != null
+          ? FcmApiType.values[map['apiType'] as int]
+          : FcmApiType.legacy,
     );
   }
 
