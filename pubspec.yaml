@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   dartz: ^0.10.1
   date_time_format: ^2.0.1
-  dio: ^4.0.6
+  dio: ^5.4.3+1
   equatable: ^2.0.3
   flash: ^3.0.5+1
   flutter_bloc: ^8.0.1
@@ -57,6 +57,7 @@ dependencies:
   toggle_switch: ^2.0.1
   uuid: ^3.0.6
   package_info_plus: ^4.1.0
+  googleapis_auth: ^1.4.1
 
 dev_dependencies:
   change_app_package_name: ^1.1.0

@@ -1,29 +1,71 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../errors/exceptions.dart';
 
 class DioClient {
   final Dio _dio = Dio();
+  final Options _options = Options();
 
-  final Map<String, String> _headers = <String, String>{
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  };
-  final fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+  Future post(
+    String path,
+    Map<String, dynamic> data, {
+    Map<String, dynamic>? headers,
+  }) async {
+    _setDioInterceptorList();
+    _options.headers = <String, dynamic>{
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
 
-  // Post request
-  Future postRequest({required String serverKey, dynamic data}) async {
-    _headers['Authorization'] = 'key=$serverKey';
+    _options.responseType = ResponseType.json;
+
+    if (headers != null) {
+      _options.headers?.addAll(headers);
+    }
+
     try {
       final Response response = await _dio.post(
-        fcmUrl,
+        path,
         data: data,
-        options: Options(headers: _headers),
+        options: Options(headers: headers),
       );
       return response;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw RemoteException(message: e.message);
-      // return e.response;
     }
+  }
+
+  void _setDioInterceptorList() async {
+    List<Interceptor> interceptorList = [];
+    _dio.interceptors.clear();
+
+    if (kDebugMode) {
+      interceptorList.add(_CustomLoggerInterceptor());
+    }
+
+    _dio.interceptors.addAll(interceptorList);
+  }
+}
+
+class _CustomLoggerInterceptor extends Interceptor {
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    log('Request: ${options.path}, ${options.data}');
+    super.onRequest(options, handler);
+  }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    log('Response: ${response.statusCode}, ${response.data}');
+    super.onResponse(response, handler);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    log('Error: ${err.message}');
+    super.onError(err, handler);
   }
 }
