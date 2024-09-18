@@ -1,7 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:uuid/uuid.dart';
-
 import 'package:fcm_notification/features/notification/domain/usecases/create_notification_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/delete_app_notifications_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/delete_notification_usecase.dart';
@@ -9,6 +7,7 @@ import 'package:fcm_notification/features/notification/domain/usecases/get_app_n
 import 'package:fcm_notification/features/notification/domain/usecases/get_notification_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/send_notification_usecase.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/update_notification_usecase.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/entities/notification_entity.dart';
@@ -111,6 +110,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
           createdAt: DateTime.now(),
           notificationType: notification.notificationType,
           receiverType: notification.receiverType,
+          data: notification.data,
         );
 
         final duplicated = await createNotification(Params(
@@ -161,6 +161,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
               createdAt: notification.createdAt,
               notificationType: notification.notificationType,
               receiverType: notification.receiverType,
+              data: notification.data,
             );
 
             emit(NotificationSentState(notification: updateSentNotification));
