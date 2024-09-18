@@ -1,18 +1,19 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:uuid/uuid.dart';
-
 import 'package:fcm_notification/core/constants/enums.dart';
 import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/core/widgets/k_radio_tile.dart';
 import 'package:fcm_notification/core/widgets/k_snack_bar.dart';
 import 'package:fcm_notification/core/widgets/k_textfield.dart';
+import 'package:fcm_notification/features/notification/domain/entities/data_entity.dart';
 import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
+import 'package:fcm_notification/features/notification/presentation/widgets/notification_data_section.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/router/app_router.dart';
@@ -54,6 +55,9 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
   bool notificationGroupTypeIsValid = true;
 
   NotificationEntity? notificationForEditing;
+
+  List<DataEntity> notificationData = [];
+  List<DataEntity> initialNotificationData = [];
 
   validateReceiverType() {
     if ((_notificationReceiverType == NotificationReceiverType.all) &&
@@ -165,6 +169,9 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
               _bodyController.text = notificationForEditing!.body!;
               _dataKeyController.text = notificationForEditing!.dataKey!;
               _dataValueController.text = notificationForEditing!.dataValue!;
+
+              initialNotificationData = [...state.notification.data ?? []];
+
               if (notificationForEditing?.imageUrl != null) {
                 _imageLinkController.text = notificationForEditing!.imageUrl!;
               }
@@ -209,7 +216,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                   KCard(
                     color: KColors.primary,
                     xPadding: 15.w,
-                    hasBorder: receiverTypeIsValid == true ? false : true,
+                    hasBorder: !receiverTypeIsValid,
                     borderColor: Colors.red,
                     borderWidth: 1.w,
                     child: Column(
@@ -268,8 +275,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                   KCard(
                     color: KColors.primary,
                     xPadding: 15.w,
-                    hasBorder:
-                        notificationGroupTypeIsValid == true ? false : true,
+                    hasBorder: !notificationGroupTypeIsValid,
                     borderColor: Colors.red,
                     borderWidth: 1.w,
                     child: Column(
@@ -288,9 +294,25 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                           },
                         ),
                         SizedBox(height: 15.h),
-                        buildNotificationFields(),
+                        _buildNotificationFields(),
                       ],
                     ),
+                  ),
+                  BlocBuilder<NotificationBloc, NotificationState>(
+                    builder: (context, state) {
+                      if (state is NotificationLoading) {
+                        return const CircularProgressIndicator();
+                      }
+                      return NotificationDataSection(
+                        key: ValueKey(initialNotificationData.hashCode),
+                        initialData: initialNotificationData,
+                        onDataChanged: (dataEntityList) {
+                          setState(() {
+                            notificationData = dataEntityList;
+                          });
+                        },
+                      );
+                    },
                   ),
                   SizedBox(height: 100.h),
                 ],
@@ -343,6 +365,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
       createdAt: DateTime.now(),
       receiverType: _notificationReceiverType,
       notificationType: _notificationGroupType,
+      data: notificationData,
     );
 
     context.read<NotificationBloc>().add(
@@ -373,6 +396,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
       lastSentAt: notificationForEditing!.lastSentAt,
       receiverType: _notificationReceiverType,
       notificationType: _notificationGroupType,
+      data: notificationData,
     );
 
     context.read<NotificationBloc>().add(
@@ -380,7 +404,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
         );
   }
 
-  Column buildNotificationFields() {
+  Column _buildNotificationFields() {
     return Column(
       children: [
         KTextField(
@@ -402,46 +426,6 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
           controller: _imageLinkController,
           bgColor: KColors.background,
           bottomPadding: 25.h,
-        ),
-        Text(
-          'Data Message (optional)',
-          style: TextStyle(
-            color: KColors.primary.shade300,
-            fontSize: 12.sp,
-          ),
-        ),
-        SizedBox(height: 12.h),
-        buildDataMessageFields(),
-      ],
-    );
-  }
-
-  Row buildDataMessageFields() {
-    return Row(
-      children: [
-        Expanded(
-          child: KTextField(
-            hintText: 'Key',
-            controller: _dataKeyController,
-            bgColor: KColors.background,
-            bottomPadding: 5.h,
-          ),
-        ),
-        Text(
-          ' : ',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: KColors.background,
-          ),
-        ),
-        Expanded(
-          child: KTextField(
-            hintText: 'Value',
-            controller: _dataValueController,
-            bottomPadding: 5.h,
-            bgColor: KColors.background,
-          ),
         ),
       ],
     );

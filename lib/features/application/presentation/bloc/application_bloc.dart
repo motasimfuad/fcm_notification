@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-
 import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 import 'package:fcm_notification/features/application/domain/usecases/create_app_usecase.dart';
 import 'package:fcm_notification/features/application/domain/usecases/delete_app_usecase.dart';
@@ -111,6 +110,11 @@ class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
           (l) => emit(AppUpdatingFailed(message: l.toString())),
           (r) => emit(AppUpdatedState()),
         );
+      }
+
+      // Refresh UI
+      if (event is RefreshUIEvent) {
+        emit(RefreshUIState());
       }
     });
   }

@@ -7,6 +7,7 @@ import 'package:fcm_notification/features/application/domain/usecases/get_app_us
 import 'package:fcm_notification/features/application/domain/usecases/update_app_usecase.dart';
 import 'package:fcm_notification/features/application/presentation/bloc/application_bloc.dart';
 import 'package:fcm_notification/features/notification/data/datasources/notification_remote_datasource.dart';
+import 'package:fcm_notification/features/notification/data/models/data_model.dart';
 import 'package:fcm_notification/features/notification/data/repositories/notification_repositiory_impl.dart';
 import 'package:fcm_notification/features/notification/domain/repositories/notification_repository.dart';
 import 'package:fcm_notification/features/notification/domain/usecases/delete_app_notifications_usecase.dart';
@@ -106,7 +107,8 @@ Future<void> init() async {
   Hive.registerAdapter(NotificationModelAdapter());
   Hive.registerAdapter(NotificationReceiverTypeAdapter());
   Hive.registerAdapter(NotificationTypeAdapter());
-
+  Hive.registerAdapter(FcmApiTypeAdapter());
+  Hive.registerAdapter(DataModelAdapter());
   // app box
   var appBox = await Hive.openBox<AppModel>(Strings.appBox);
   getIt.registerLazySingleton(() => appBox);

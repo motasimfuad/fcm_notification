@@ -5,6 +5,7 @@ import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:fcm_notification/core/widgets/k_appbar.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/core/widgets/k_image_container.dart';
+import 'package:fcm_notification/features/notification/presentation/widgets/notification_data_section.dart';
 import 'package:fcm_notification/features/notification/presentation/widgets/notification_fab_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -130,6 +131,13 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                             value: notification?.deviceId,
                           ),
                     buildNotificationFields(),
+                    if (notification?.data?.isNotEmpty ?? false)
+                      NotificationDataSection(
+                        isReadOnly: true,
+                        key: ValueKey(notification?.hashCode),
+                        initialData: notification?.data ?? [],
+                        onDataChanged: (dataEntityList) {},
+                      ),
                   ],
                 ),
               );
@@ -248,40 +256,9 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
                     ],
                   )
                 : const SizedBox(),
-            (notification?.dataKey != null &&
-                    notification!.dataKey!.trim().isNotEmpty &&
-                    notification?.dataValue != null &&
-                    notification!.dataValue!.trim().isNotEmpty)
-                ? buildDataMessageFields()
-                : const SizedBox(),
           ],
         ),
       ),
-    );
-  }
-
-  buildDataMessageFields() {
-    return Column(
-      children: [
-        SizedBox(
-          width: 50.w,
-          child: Divider(
-            color: KColors.background,
-            thickness: 2.w,
-            height: 20.w,
-          ),
-        ),
-        NotificationDetailItem(
-          label: 'Key',
-          bgColor: KColors.background,
-          value: notification?.dataKey,
-        ),
-        NotificationDetailItem(
-          label: 'Value',
-          bgColor: KColors.background,
-          value: notification?.dataValue,
-        ),
-      ],
     );
   }
 }

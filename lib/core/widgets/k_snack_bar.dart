@@ -27,17 +27,17 @@ kSnackBar({
 }) {
   showFlash(
     context: context,
-    duration: Duration(seconds: durationSeconds ?? 3),
+    duration: Duration(seconds: durationSeconds ?? 2),
     persistent: true,
     builder: (_, controller) {
       return Flash(
         controller: controller,
-        position: position ?? FlashPosition.top,
-        forwardAnimationCurve: Curves.easeInOutCubic,
+        position: position ?? FlashPosition.bottom,
+        forwardAnimationCurve: Curves.easeInCirc,
         reverseAnimationCurve: Curves.easeOut,
         dismissDirections: isDismissible == true
             ? const [
-                FlashDismissDirection.startToEnd,
+                FlashDismissDirection.vertical,
               ]
             : [],
         child: FlashBar(
@@ -48,7 +48,7 @@ kSnackBar({
           backgroundColor: generateBgColor(type),
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.r),
+            borderRadius: BorderRadius.circular(13.r),
           ),
           dismissDirections: isDismissible == true
               ? const [

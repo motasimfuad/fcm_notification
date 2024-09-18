@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:fcm_notification/core/constants/constants.dart';
 import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
 import 'package:fcm_notification/features/notification/data/models/notification_model.dart';
 import 'package:hive/hive.dart';
@@ -22,6 +23,8 @@ class AppModel extends AppEntity {
   final List<NotificationModel?>? notifications;
   @HiveField(5)
   final DateTime createdAt;
+  @HiveField(6)
+  final FcmApiType apiType;
 
   const AppModel({
     required this.id,
@@ -30,13 +33,16 @@ class AppModel extends AppEntity {
     this.iconName,
     this.notifications,
     required this.createdAt,
-  }) : super(
+    FcmApiType? apiType,
+  })  : apiType = apiType ?? FcmApiType.legacy,
+        super(
           id: id,
           name: name,
           serverKey: serverKey,
           iconName: iconName,
           notifications: notifications,
           createdAt: createdAt,
+          apiType: apiType ?? FcmApiType.legacy,
         );
 
   AppModel copyWith({
@@ -46,6 +52,7 @@ class AppModel extends AppEntity {
     String? iconName,
     List<NotificationModel>? notifications,
     DateTime? createdAt,
+    FcmApiType? apiType,
   }) {
     return AppModel(
       id: id ?? this.id,
@@ -54,6 +61,7 @@ class AppModel extends AppEntity {
       iconName: iconName ?? this.iconName,
       notifications: notifications ?? this.notifications,
       createdAt: createdAt ?? this.createdAt,
+      apiType: apiType ?? this.apiType,
     );
   }
 
@@ -69,6 +77,7 @@ class AppModel extends AppEntity {
               .toList()
           : null,
       'createdAt': createdAt.millisecondsSinceEpoch,
+      'apiType': apiType.index,
     };
   }
 
@@ -81,6 +90,9 @@ class AppModel extends AppEntity {
       notifications: List<NotificationModel>.from(
           map['notifications']?.map((x) => NotificationModel.fromMap(x))),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
+      apiType: map['apiType'] != null
+          ? FcmApiType.values[map['apiType'] as int]
+          : FcmApiType.legacy,
     );
   }
 
@@ -97,6 +109,7 @@ class AppModel extends AppEntity {
                   .toList()
               : null,
       createdAt: entity.createdAt,
+      apiType: entity.apiType,
     );
   }
 
@@ -110,6 +123,7 @@ class AppModel extends AppEntity {
           ? notifications!.map((e) => e!.toNotificationEntity()).toList()
           : null,
       createdAt: createdAt,
+      apiType: apiType,
     );
   }
 
@@ -120,6 +134,6 @@ class AppModel extends AppEntity {
 
   @override
   String toString() {
-    return 'AppModel(id: $id, name: $name, serverKey: $serverKey, iconName: $iconName, notifications: $notifications), createdAt: $createdAt)';
+    return 'AppModel(id: $id, name: $name, serverKey: $serverKey, iconName: $iconName, notifications: $notifications), createdAt: $createdAt, apiType: $apiType)';
   }
 }

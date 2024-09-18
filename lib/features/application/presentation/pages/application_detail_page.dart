@@ -1,4 +1,4 @@
-import 'package:fcm_notification/core/constants/colors.dart';
+import 'package:fcm_notification/core/constants/constants.dart';
 import 'package:fcm_notification/core/router/app_router.dart';
 import 'package:fcm_notification/core/widgets/k_card.dart';
 import 'package:fcm_notification/features/application/domain/entities/app_entity.dart';
@@ -8,7 +8,6 @@ import 'package:fcm_notification/features/notification/presentation/widgets/noti
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/widgets/k_appbar.dart';
 import '../../../../core/widgets/k_fab.dart';
@@ -45,9 +44,7 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
     super.initState();
   }
 
-  bool notificationListIsEmpty() {
-    return (notifications == null || notifications!.isEmpty);
-  }
+  bool notificationListIsEmpty() => notifications?.isEmpty ?? true;
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +144,8 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                               value: app?.name,
                             ),
                             NotificationDetailItem(
-                              label: 'Server Key',
+                              label:
+                                  'Server Key - ${app?.apiType.name.capitalized() ?? 'Legacy'}',
                               value: app?.serverKey,
                               hasBottomMargin: false,
                             ),
@@ -190,6 +188,7 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                             iconName: app!.iconName,
                             createdAt: app!.createdAt,
                             notifications: notifications,
+                            apiType: app?.apiType ?? FcmApiType.legacy,
                           );
                           context
                               .read<ApplicationBloc>()

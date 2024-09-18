@@ -95,6 +95,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                         children: [
                           Expanded(
                             child: ListView.builder(
+                              padding: EdgeInsets.only(bottom: 70.h),
                               keyboardDismissBehavior:
                                   ScrollViewKeyboardDismissBehavior.onDrag,
                               itemCount: allApps.length,
@@ -182,6 +183,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
       ),
       builder: (context) => SizedBox(
         height: 200.h,
+        width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
