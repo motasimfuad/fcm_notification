@@ -66,9 +66,12 @@ class NotificationRemoteDatasourceImpl implements NotificationRemoteDatasource {
               'sound': 'default',
             }
           },
-          "data": {
-            '${notification.dataKey}': '${notification.dataValue}',
-          }
+          'data': notification.data?.asMap().map(
+                (key, value) => MapEntry(
+                  value.keyData,
+                  value.valueData,
+                ),
+              ),
         }
       },
       headers: {'Authorization': 'Bearer $accessToken'},
