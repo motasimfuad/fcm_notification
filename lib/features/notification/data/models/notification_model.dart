@@ -2,9 +2,9 @@
 
 import 'dart:convert';
 
-import 'package:hive/hive.dart';
-
+import 'package:fcm_notification/features/notification/data/models/data_model.dart';
 import 'package:fcm_notification/features/notification/domain/entities/notification_entity.dart';
+import 'package:hive/hive.dart';
 
 import '../../../../core/constants/enums.dart';
 
@@ -43,6 +43,8 @@ class NotificationModel extends NotificationEntity {
   final NotificationReceiverType? receiverType;
   @HiveField(13)
   final NotificationType? notificationType;
+  @HiveField(14)
+  final List<DataModel>? data;
 
   const NotificationModel({
     required this.appId,
@@ -59,6 +61,7 @@ class NotificationModel extends NotificationEntity {
     this.lastSentAt,
     this.receiverType,
     this.notificationType,
+    this.data,
   }) : super(
           appId: appId,
           id: id,
@@ -74,6 +77,7 @@ class NotificationModel extends NotificationEntity {
           lastSentAt: lastSentAt,
           receiverType: receiverType,
           notificationType: notificationType,
+          data: data,
         );
 
   NotificationModel copyWith({
@@ -91,6 +95,7 @@ class NotificationModel extends NotificationEntity {
     DateTime? lastSentAt,
     NotificationReceiverType? receiverType,
     NotificationType? notificationType,
+    List<DataModel>? data,
   }) {
     return NotificationModel(
       appId: appId ?? this.appId,
@@ -107,6 +112,7 @@ class NotificationModel extends NotificationEntity {
       lastSentAt: lastSentAt ?? this.lastSentAt,
       receiverType: receiverType ?? this.receiverType,
       notificationType: notificationType ?? this.notificationType,
+      data: data ?? this.data,
     );
   }
 
@@ -125,6 +131,8 @@ class NotificationModel extends NotificationEntity {
       'createdAt': createdAt.millisecondsSinceEpoch,
       'lastSentAt': lastSentAt?.millisecondsSinceEpoch,
       'receiverType': receiverType?.index,
+      'notificationType': notificationType?.index,
+      'data': data?.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -150,6 +158,10 @@ class NotificationModel extends NotificationEntity {
       notificationType: map['notificationType'] != null
           ? NotificationType.values[map['notificationType']]
           : null,
+      data: (map['data'] as List<dynamic>?)
+          ?.map((e) => e is Map<String, dynamic> ? DataModel.fromJson(e) : null)
+          .whereType<DataModel>()
+          .toList(),
     );
   }
 
@@ -178,6 +190,11 @@ class NotificationModel extends NotificationEntity {
       lastSentAt: notificationEntity.lastSentAt,
       receiverType: notificationEntity.receiverType,
       notificationType: notificationEntity.notificationType,
+      data: (notificationEntity.data?.isNotEmpty ?? false)
+          ? notificationEntity.data!
+              .map((e) => DataModel.fromDataEntity(e))
+              .toList()
+          : null,
     );
   }
 
@@ -197,11 +214,26 @@ class NotificationModel extends NotificationEntity {
       lastSentAt: lastSentAt,
       receiverType: receiverType,
       notificationType: notificationType,
+      data: data,
     );
+  }
+
+  List<DataModel> get combinedData {
+    if (data?.isNotEmpty ?? false) data!.whereType<DataModel>().toList();
+    if (dataKey != null && dataValue != null) {
+      return [
+        DataModel(
+          id: id,
+          keyData: dataKey!,
+          valueData: dataValue!,
+        )
+      ];
+    }
+    return [];
   }
 
   @override
   String toString() {
-    return 'NotificationModel(appId: $appId ,id: $id, name: $name, topicName: $topicName, deviceId: $deviceId, title: $title, body: $body, imageUrl: $imageUrl, key: $dataKey, value: $dataValue, createdAt: $createdAt, lastSentAt: $lastSentAt, receiverType: $receiverType, notificationType: $notificationType)';
+    return 'NotificationModel(appId: $appId ,id: $id, name: $name, topicName: $topicName, deviceId: $deviceId, title: $title, body: $body, imageUrl: $imageUrl, key: $dataKey, value: $dataValue, createdAt: $createdAt, lastSentAt: $lastSentAt, receiverType: $receiverType, notificationType: $notificationType, data: $data)';
   }
 }
