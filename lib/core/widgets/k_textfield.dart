@@ -18,6 +18,7 @@ class KTextField extends StatelessWidget {
   final Color? bgColor;
   final int? maxLines;
   final double? bottomPadding;
+  final bool isReadOnly;
   const KTextField({
     Key? key,
     this.hintText,
@@ -34,6 +35,7 @@ class KTextField extends StatelessWidget {
     this.bgColor,
     this.maxLines,
     this.bottomPadding,
+    this.isReadOnly = false,
   }) : super(key: key);
 
   @override
@@ -73,6 +75,8 @@ class KTextField extends StatelessWidget {
             style: TextStyle(
               color: KColors.primaryLight,
             ),
+            readOnly: isReadOnly,
+            enabled: !isReadOnly,
             maxLines: maxLines,
             decoration: InputDecoration(
               hintText: hintText,

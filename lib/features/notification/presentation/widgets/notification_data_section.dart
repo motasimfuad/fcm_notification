@@ -13,10 +13,12 @@ class NotificationDataSection extends StatefulWidget {
     super.key,
     required this.initialData,
     required this.onDataChanged,
+    this.isReadOnly = false,
   });
 
   final List<DataEntity> initialData;
   final Function(List<DataEntity>) onDataChanged;
+  final bool isReadOnly;
 
   @override
   State<NotificationDataSection> createState() =>
@@ -86,6 +88,7 @@ class _NotificationDataSectionState extends State<NotificationDataSection> {
       child: KCard(
         color: KColors.primary,
         xPadding: 15.w,
+        yMargin: 20.h,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -94,61 +97,76 @@ class _NotificationDataSectionState extends State<NotificationDataSection> {
                 horizontal: 8.w,
                 vertical: 12.h,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Row(
+              child: (widget.isReadOnly)
+                  ? Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Icon(
-                          Icons.data_array,
-                          color: KColors.secondary,
+                        Text(
+                          'Data',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: KColors.primary.shade300,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                        SizedBox(width: 20.w),
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(
-                                'Optional Data',
-                                style: TextStyle(
-                                  color: KColors.secondary,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14.sp,
-                                ),
+                              const Icon(
+                                Icons.data_array,
+                                color: KColors.secondary,
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 3.5.h),
-                                child: Text(
-                                  'Add optional data to your notification',
-                                  style: TextStyle(
-                                    fontSize: 12.5.sp,
-                                    color: KColors.grey,
-                                  ),
+                              SizedBox(width: 20.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Optional Data',
+                                      style: TextStyle(
+                                        color: KColors.secondary,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 3.5.h),
+                                      child: Text(
+                                        'Add optional data to your notification',
+                                        style: TextStyle(
+                                          fontSize: 12.5.sp,
+                                          color: KColors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
+                        SizedBox(width: 12.w),
+                        KIconButton(
+                          onPressed: isDataValid ? _addData : null,
+                          icon: Icons.add,
+                          bgColor:
+                              isDataValid ? null : KColors.primary.shade400,
+                          iconColor:
+                              isDataValid ? KColors.secondary : KColors.primary,
+                          size: 14.w,
+                        ),
                       ],
                     ),
-                  ),
-                  SizedBox(width: 12.w),
-                  KIconButton(
-                    onPressed: isDataValid ? _addData : null,
-                    icon: Icons.add,
-                    bgColor: isDataValid ? null : KColors.primary.shade400,
-                    iconColor:
-                        isDataValid ? KColors.secondary : KColors.primary,
-                    size: 14.w,
-                  ),
-                ],
-              ),
             ),
             ListView.builder(
               padding: dataEntityList.isNotEmpty
-                  ? EdgeInsets.only(top: 12.h)
+                  ? EdgeInsets.only(top: widget.isReadOnly ? 6.h : 12.h)
                   : EdgeInsets.zero,
               itemCount: dataEntityList.length,
               shrinkWrap: true,
@@ -162,6 +180,7 @@ class _NotificationDataSectionState extends State<NotificationDataSection> {
                     log('Has focus $index: $hasFocus');
                   },
                   child: _DataItem(
+                    isReadOnly: widget.isReadOnly,
                     keyFocusNode: !isLast ? null : keyFocusNode,
                     key: ValueKey(dataEntity.id),
                     dataEntity: dataEntity,
@@ -198,12 +217,14 @@ class _DataItem extends StatefulWidget {
     required this.onDataChanged,
     required this.onDelete,
     required this.keyFocusNode,
+    required this.isReadOnly,
   });
 
   final DataEntity dataEntity;
   final Function(DataEntity) onDataChanged;
   final Function(String) onDelete;
   final FocusNode? keyFocusNode;
+  final bool isReadOnly;
 
   @override
   State<_DataItem> createState() => _DataItemState();
@@ -246,6 +267,7 @@ class _DataItemState extends State<_DataItem> {
               children: [
                 Expanded(
                   child: KTextField(
+                    isReadOnly: widget.isReadOnly,
                     key: ValueKey(widget.dataEntity.id),
                     focusNode: widget.keyFocusNode,
                     hintText: 'Key',
@@ -273,6 +295,7 @@ class _DataItemState extends State<_DataItem> {
                 ),
                 Expanded(
                   child: KTextField(
+                    isReadOnly: widget.isReadOnly,
                     hintText: 'Value',
                     textInputAction: TextInputAction.done,
                     controller: valueController,
@@ -292,18 +315,19 @@ class _DataItemState extends State<_DataItem> {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 10.w),
-            child: KIconButton(
-              iconColor: KColors.primaryLight,
-              size: 12.w,
-              onPressed: () {
-                widget.onDelete(widget.dataEntity.id);
-                setState(() {});
-              },
-              icon: Icons.close_rounded,
+          if (!widget.isReadOnly)
+            Padding(
+              padding: EdgeInsets.only(left: 10.w),
+              child: KIconButton(
+                iconColor: KColors.primaryLight,
+                size: 12.w,
+                onPressed: () {
+                  widget.onDelete(widget.dataEntity.id);
+                  setState(() {});
+                },
+                icon: Icons.close_rounded,
+              ),
             ),
-          ),
         ],
       ),
     );

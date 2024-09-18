@@ -298,7 +298,6 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20.h),
                   BlocBuilder<NotificationBloc, NotificationState>(
                     builder: (context, state) {
                       if (state is NotificationLoading) {
